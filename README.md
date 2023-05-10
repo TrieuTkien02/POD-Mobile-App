@@ -12,6 +12,6 @@ Thiết lập sàn thương mại điện tử theo mô hình kinh doanh trên x
 - Firebase
 - Môi trường: Android Studio
 
-Timeline của nhóm: ................ 
+Timeline của nhóm: [Timeline]([https://example.com/docs/](https://docs.google.com/spreadsheets/d/1OTKtokJ-Pui2MidgS1YHy2prpGgVbgoHaDf4CyLytZk/edit?usp=sharing))
 
 **Đồ án được thực hiện bởi: Trần Triệu Thiên, Dương Quốc Hải, Nguyễn Minh Sơn**
