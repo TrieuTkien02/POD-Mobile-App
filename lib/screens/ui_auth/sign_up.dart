@@ -1,7 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pod_market/screens/ui_auth/login.dart';
+import 'package:pod_market/screens/ui_auth/welcome.dart';
+import '../../constants/constants.dart';
 import '../../constants/routes.dart';
+import '../../firebase/firebase_auth_helper.dart';
 import '../../widgets/primary_button.dart';
 
 
@@ -119,16 +123,17 @@ class _SignUpState extends State<SignUp> {
               PrimaryButton(
                 title: "Tạo tài khoản",
                 onPressed: () async {
-                  // bool isVaildated = signUpVaildation(
-                  //     email.text, password.text, name.text, phone.text);
-                  // if (isVaildated) {
-                  //   bool isLogined = await FirebaseAuthHelper.instance
-                  //       .signUp(name.text, email.text, password.text, context);
-                  //   if (isLogined) {
-                  //     Routes.instance.pushAndRemoveUntil(
-                  //         widget: const CustomBottomBar(), context: context);
-                  //   }
-                  // }
+                  bool isVaildated = signUpVaildation(
+                      email.text, password.text, name.text, phone.text);
+                  if (isVaildated) {
+                    bool isLogined = await FirebaseAuthHelper.instance
+                        .signUp(name.text, email.text, password.text, context);
+                    if (isLogined) {
+                      showMessage("Đăng ký thành công");
+                      Routes.instance.pushAndRemoveUntil(
+                          widget: const Login(), context: context);
+                    }
+                  }
                 },
               ),
               const SizedBox(

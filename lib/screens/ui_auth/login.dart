@@ -2,9 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pod_market/screens/ui_auth/sign_up.dart';
+import 'package:pod_market/screens/ui_auth/welcome.dart';
 
 import '../../constants/constants.dart';
 import '../../constants/routes.dart';
+import '../../firebase/firebase_auth_helper.dart';
 import '../../widgets/primary_button.dart';
 
 class Login extends StatefulWidget {
@@ -92,15 +94,15 @@ class _LoginState extends State<Login> {
               PrimaryButton(
                 title: "Đăng nhập",
                 onPressed: () async {
-                  // bool isVaildated = loginVaildation(email.text, password.text);
-                  // if (isVaildated) {
-                  //   bool isLogined = await FirebaseAuthHelper.instance
-                  //       .login(email.text, password.text, context);
-                  //   if (isLogined) {
-                  //     Routes.instance.pushAndRemoveUntil(
-                  //         widget: const CustomBottomBar(), context: context);
-                  //   }
-                  // }
+                  bool isVaildated = loginVaildation(email.text, password.text);
+                  if (isVaildated) {
+                    bool isLogined = await FirebaseAuthHelper.instance
+                        .login(email.text, password.text, context);
+                    if (isLogined) {
+                      Routes.instance.pushAndRemoveUntil(
+                          widget: const Welcome(), context: context);
+                    }
+                  }
                 },
               ),
               const SizedBox(

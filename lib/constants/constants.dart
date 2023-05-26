@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 void showMessage(String message) {
   Fluttertoast.showToast(
     msg: message,
-    gravity: ToastGravity.CENTER,
-    backgroundColor: Colors.red,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.black,
     textColor: Colors.white,
     fontSize: 20.0,
   );
@@ -20,14 +20,14 @@ showLoaderDialog(BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           children: [
             const CircularProgressIndicator(
-              color: Color(0xffe16555),
+              color: Colors.lightBlue,
             ),
             const SizedBox(
               height: 18.0,
             ),
             Container(
                 margin: const EdgeInsets.only(left: 7),
-                child: const Text("Loading...")),
+                child: const Text("Đang tải...")),
           ],
         ),
       );
@@ -72,7 +72,7 @@ String getMessageFromErrorCode(String errorCode) {
     case "invalid-email":
       return "Địa chỉ email không hợp lệ.";
     default:
-      return "Đăng nhập thất bại. Vui lòng thử lại";
+      return "Đăng nhập thất bại. Hãy thử lại";
   }
 }
 

@@ -5,4 +5,5 @@ class AssetsImages {
 
   final String logoLight = "$_imagesPath/Logo-Light.png";
   final String logoDark = "$_imagesPath/Logo-Dark.png";
+  final String splashDark = "$_imagesPath/Splash-DarkMode.png";
 }
