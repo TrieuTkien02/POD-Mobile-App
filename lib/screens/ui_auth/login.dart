@@ -1,9 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pod_market/screens/home.dart';
 import 'package:pod_market/screens/ui_auth/sign_up.dart';
-import 'package:pod_market/screens/ui_auth/welcome.dart';
-
 import '../../constants/constants.dart';
 import '../../constants/routes.dart';
 import '../../firebase/firebase_auth_helper.dart';
@@ -100,7 +99,7 @@ class _LoginState extends State<Login> {
                         .login(email.text, password.text, context);
                     if (isLogined) {
                       Routes.instance.pushAndRemoveUntil(
-                          widget: const Welcome(), context: context);
+                          widget: const Home(), context: context);
                     }
                   }
                 },

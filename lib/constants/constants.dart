@@ -72,7 +72,7 @@ String getMessageFromErrorCode(String errorCode) {
     case "invalid-email":
       return "Địa chỉ email không hợp lệ.";
     default:
-      return "Đăng nhập thất bại. Hãy thử lại";
+      return "Thất bại. Hãy thử lại";
   }
 }
 

@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pod_market/screens/ui_auth/login.dart';
-import 'package:pod_market/screens/ui_auth/welcome.dart';
 import '../../constants/constants.dart';
 import '../../constants/routes.dart';
 import '../../firebase/firebase_auth_helper.dart';
