@@ -8,10 +8,15 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 45,
+      height: 60,
       width: double.infinity,
       child: ElevatedButton(
         onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // Đặt bán kính bo tròn
+          ),
+        ),
         child: Text(title),
       ),
     );

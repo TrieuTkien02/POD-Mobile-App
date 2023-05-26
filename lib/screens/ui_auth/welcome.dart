@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pod_market/screens/ui_auth/start.dart';
 import '../../constants/asset_images.dart';
-import '../../widgets/primary_button.dart';
+import '../../constants/routes.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
@@ -9,49 +10,42 @@ class Welcome extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const SizedBox(
-            height: kToolbarHeight,
-          ),
-          const Text(
-            "Chào mừng đến với POD Market",
-            style: TextStyle(
-              fontSize: 25.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Text(
-            "Mua bất cứ thứ gì bạn thích",
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
           Center(
               child: Image.asset(
             AssetsImages.instance.logoDark,
-            alignment: Alignment.center,
           )),
-          
-          const SizedBox(
-            height: 30.0,
-          ),
-          PrimaryButton(
-            title: "Đăng nhập",
-            onPressed: () {
-              //Routes.instance.push(widget: const Login(), context: context);
-            },
+          const Text(
+            textAlign: TextAlign.center,
+            "\"Mua sắm là một cách để kết nối với chính mình, để tận hưởng khoảnh khắc và tìm thấy niềm vui trong những điều nhỏ bé\"",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+            ),
           ),
           const SizedBox(
-            height: 18.0,
+            height: 80.0,
           ),
-          PrimaryButton(
-            title: "Đăng ký",
-            onPressed: () {
-              //Routes.instance.push(widget: const SignUp(), context: context);
-            },
-          ),
+          SizedBox(
+            height: 80,
+            width: 400,
+            child: ElevatedButton(
+              onPressed: () {
+                Routes.instance.push(widget: const Start(), context: context);
+              },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const Text(
+                "Tiếp tục",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
