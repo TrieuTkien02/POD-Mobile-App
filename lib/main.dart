@@ -1,19 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:partnerapp/Pages/TrangChu.dart';
+import 'constants/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+import 'firebase/firebase_auth_helper.dart';
+import 'firebase/firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: DefaultFirebaseConfig.platformOptions
+  );
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'POD Partner',
+      theme: themeData,
+      home: StreamBuilder(
+        stream: FirebaseAuthHelper.instance.getAuthChange,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return MyHomePage();
+          }
+          return MyHomePage();
+        },
+      ),
+    );
   }
 }

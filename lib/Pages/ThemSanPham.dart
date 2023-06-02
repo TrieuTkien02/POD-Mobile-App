@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:partnerapp/Values/app_assets.dart';
 
+
 void main() {
-  runApp(MyApp());
+  runApp(ThemSanPham());
 }
 
-class MyApp extends StatelessWidget {
+class ThemSanPham extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -495,3 +496,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
