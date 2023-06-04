@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:partnerapp/Values/app_assets.dart';
-
-
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:partnerapp/models/addproduct.dart';
 void main() {
   runApp(ThemSanPham());
 }
 
-class ThemSanPham extends StatelessWidget {
+class ThemSanPham extends StatefulWidget {
+  @override
+  _ThemSanPhamState createState() => _ThemSanPhamState();
+}
+
+class _ThemSanPhamState extends State<ThemSanPham> {
+  late File? _selectedImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedImage = null; // Khởi tạo _selectedImage với giá trị null
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,20 +28,7 @@ class ThemSanPham extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+      home: Scaffold(
       body: Column(
         children: [
           Container(
@@ -187,19 +188,33 @@ class _MyHomePageState extends State<MyHomePage> {
                           style: TextStyle(color: Colors.black, fontSize: 16),), // Widget Text
                         SizedBox(width: 10), // Khoảng cách giữa Text và Button
                         ElevatedButton(
-
-                          onPressed: () {
-                            // Xử lý sự kiện khi nhấn nút
+                          onPressed: () async {
+                            final picker = ImagePicker();
+                            final pickedImage =
+                            await picker.getImage(source: ImageSource.gallery);
+                            if (pickedImage != null) {
+                              setState(() {
+                                _selectedImage = File(pickedImage.path);
+                              });
+                            }
                           },
-                          child: Text('+ Thêm ',
-                            style: TextStyle(color: Colors.black, fontSize: 16),),
+                          child: _selectedImage != null
+                              ? Image.file(
+                            _selectedImage!,
+                            height: 100,
+                            width: 100,
+                          )
+                              : Text(
+                            '+ Thêm ',
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.white, // Màu nền trắng
-                            onPrimary: Colors.black, // Màu chữ đen
+                            primary: Colors.white,
+                            onPrimary: Colors.black,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // Viền đen bo tròn
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          ),// Widget Button
+                          ),
                         ),
 
                       ],
@@ -401,7 +416,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     alignment: Alignment.center,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Xử lý sự kiện khi nhấn nút "Đăng bán"
+                        // Tạo một đối tượng Product từ dữ liệu nhập vào
+                        Product newProduct = Product(
+                          name: 'Tên sản phẩm',
+                          description: 'Mô tả sản phẩm',
+                          price: 10.0, // Giá sản phẩm
+                          category: 'Danh mục sản phẩm',
+                          image: _selectedImage!,
+                        );
+
+                        // Gọi hàm addProductToFirestore để đăng sản phẩm lên Firestore
+                        addProductToFirestore(newProduct);
                       },
                       child: Text(
                         'Đăng bán',
@@ -493,6 +518,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
+      )
     );
   }
 }
