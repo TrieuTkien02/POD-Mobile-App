@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData themeData = ThemeData(
     scaffoldBackgroundColor: Colors.white,
-    primaryColor: Colors.red,
+    primaryColor: Colors.grey,
     outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
             foregroundColor: Colors.red,

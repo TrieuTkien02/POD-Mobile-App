@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pod_market/models/sale_model.dart';
+import 'package:pod_market/screens/category_view.dart';
+import 'package:pod_market/screens/product_details.dart';
 import 'package:provider/provider.dart';
 import '../constants/routes.dart';
-import '../firebase/firebase_firestore.dart';
+import '../firebase_support/firebase_firestore.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
-
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,6 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<CategoryModel> categoriesList = [];
   List<ProductModel> productModelList = [];
+  List<SaleModel> saleModellList = [];
 
   bool isLoading = false;
   @override
@@ -34,6 +37,7 @@ class _HomeState extends State<Home> {
     FirebaseFirestoreHelper.instance.updateTokenFromFirebase();
     categoriesList = await FirebaseFirestoreHelper.instance.getCategories();
     productModelList = await FirebaseFirestoreHelper.instance.getBestProducts();
+    saleModellList = await FirebaseFirestoreHelper.instance.getSale();
 
     productModelList.shuffle();
     if (mounted) {
@@ -56,6 +60,58 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 15.0),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                border: Border.all(color: Colors.red, width: 3.0),
+              ),
+              child: TextFormField(
+                controller: search,
+                onChanged: (String value) {
+                  searchProducts(value);
+                },
+                decoration: const InputDecoration(
+                  prefixIconColor: Colors.black,
+                  enabledBorder: InputBorder.none,
+                  prefixIcon: Icon(Icons.search),
+                  hintText: "Tìm kiếm sản phẩm....",
+                ),
+                autofocus: false,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            alignment: Alignment.center,
+            onPressed: () {
+              // TODO: Xử lý khi nhấn biểu tượng giỏ hàng
+            },
+            icon: const Icon(
+              Icons.shopping_cart,
+              color: Colors.red,
+            ),
+            iconSize: 35.0,
+          ),
+          IconButton(
+            alignment: Alignment.center,
+            onPressed: () {
+              // TODO: Xử lý khi nhấn biểu tượng thông báo
+            },
+            icon: const Icon(
+              Icons.notifications,
+              color: Colors.red,
+            ),
+            iconSize: 35.0,
+          ),
+        ],
+      ),
       body: isLoading
           ? Center(
               child: Container(
@@ -69,32 +125,70 @@ class _HomeState extends State<Home> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
+                  const Padding(
+                    padding: EdgeInsets.all(12.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          controller: search,
-                          onChanged: (String value) {
-                            searchProducts(value);
-                          },               
-                          decoration: const InputDecoration(
-                              prefixIcon: Icon(Icons.search),
-                              hintText: "Tìm kiếm sản phẩm...."),
-                          autofocus: false,
-                        ),
-                        const SizedBox(
-                          height: 24.0,
-                        ),
-                        const Text(
-                          "Danh mục",
+                        Text(
+                          "Tin tức khuyến mãi",
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  saleModellList.isEmpty
+                      ? const Center(
+                          child: Text("Tin tức khuyến mãi trống"),
+                        )
+                      : SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: saleModellList
+                                .map(
+                                  (e) => Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: CupertinoButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () {
+                                        // Routes.instance.push(
+                                        //     widget:
+                                        //         CategoryView(categoryModel: e),
+                                        //     context: context);
+                                      },
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                          side: BorderSide.none,
+                                        ),
+                                        color: Colors.white,
+                                        elevation: 3.0,
+                                        child: SizedBox(
+                                          width: 320,
+                                          height: 180,
+                                          child: Image.network(e.image),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                  const Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Phân loại",
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
                           ),
                         ),
                       ],
@@ -114,10 +208,10 @@ class _HomeState extends State<Home> {
                                     child: CupertinoButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
-                                        // Routes.instance.push(
-                                        //     widget:
-                                        //         CategoryView(categoryModel: e),
-                                        //     context: context);
+                                        Routes.instance.push(
+                                            widget:
+                                                CategoryView(categoryModel: e),
+                                            context: context);
                                       },
                                       child: Card(
                                         color: Colors.white,
@@ -149,6 +243,7 @@ class _HomeState extends State<Home> {
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,
+                              color: Colors.red,
                             ),
                           ),
                         )
@@ -179,9 +274,7 @@ class _HomeState extends State<Home> {
                                         searchList[index];
                                     return Container(
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .primaryColor
-                                            .withOpacity(0.2),
+                                        color: Colors.grey.withOpacity(0.3),
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                       ),
@@ -212,7 +305,13 @@ class _HomeState extends State<Home> {
                                             height: 12.0,
                                           ),
                                           Text(
-                                              "Giá: \$${singleProduct.price}"),
+                                            "\$${singleProduct.price}",
+                                            style: const TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                           const SizedBox(
                                             height: 20.0,
                                           ),
@@ -221,11 +320,11 @@ class _HomeState extends State<Home> {
                                             width: 140,
                                             child: OutlinedButton(
                                               onPressed: () {
-                                                // Routes.instance.push(
-                                                //     widget: ProductDetails(
-                                                //         singleProduct:
-                                                //             singleProduct),
-                                                //     context: context);
+                                                Routes.instance.push(
+                                                    widget: ProductDetails(
+                                                        singleProduct:
+                                                            singleProduct),
+                                                    context: context);
                                               },
                                               child: const Text(
                                                 'Mua',
@@ -264,9 +363,7 @@ class _HomeState extends State<Home> {
                                             productModelList[index];
                                         return Container(
                                           decoration: BoxDecoration(
-                                            color: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.2),
+                                            color: Colors.grey.withOpacity(0.3),
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                           ),
@@ -297,7 +394,13 @@ class _HomeState extends State<Home> {
                                                 height: 12.0,
                                               ),
                                               Text(
-                                                  "Giá: \$${singleProduct.price}"),
+                                                "\$${singleProduct.price}",
+                                                style: const TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                               const SizedBox(
                                                 height: 20.0,
                                               ),
@@ -306,11 +409,11 @@ class _HomeState extends State<Home> {
                                                 width: 140,
                                                 child: OutlinedButton(
                                                   onPressed: () {
-                                                    // Routes.instance.push(
-                                                    //     widget: ProductDetails(
-                                                    //         singleProduct:
-                                                    //             singleProduct),
-                                                    //     context: context);
+                                                    Routes.instance.push(
+                                                        widget: ProductDetails(
+                                                            singleProduct:
+                                                                singleProduct),
+                                                        context: context);
                                                   },
                                                   child: const Text(
                                                     'Mua',

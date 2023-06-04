@@ -14,7 +14,7 @@ class PrimaryButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20), // Đặt bán kính bo tròn
+            borderRadius: BorderRadius.circular(20), 
           ),
         ),
         child: Text(title),

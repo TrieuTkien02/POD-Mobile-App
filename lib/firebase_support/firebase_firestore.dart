@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:pod_market/models/sale_model.dart';
 import '../constants/constants.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
@@ -10,6 +11,23 @@ import '../models/product_model.dart';
 class FirebaseFirestoreHelper {
   static FirebaseFirestoreHelper instance = FirebaseFirestoreHelper();
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
+  Future<List<SaleModel>> getSale() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _firebaseFirestore.collection("sale").get();
+
+      List<SaleModel> saleList = querySnapshot.docs
+          .map((e) => SaleModel.fromJson(e.data()))
+          .toList();
+
+      return saleList;
+    } catch (e) {
+      showMessage(e.toString());
+      return [];
+    }
+  }
+
   Future<List<CategoryModel>> getCategories() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =

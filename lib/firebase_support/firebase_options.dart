@@ -6,7 +6,7 @@ class DefaultFirebaseConfig {
     if (Platform.isIOS) {
       // iOS and MacOS
       return const FirebaseOptions(
-        appId: '1:252769608934:ios:dd359a062dfafdb2eb4727',
+        appId: '1:30048143757:ios:384529b86e3be0cc8815c4',
         apiKey: 'AIzaSyBs-QIK60uj7T9BNoW7gSwukimlBni30DM',
         projectId: 'pod-mobile-app-c9d53',
         messagingSenderId: '30048143757',
@@ -15,7 +15,7 @@ class DefaultFirebaseConfig {
     } else {
       // Android
       return const FirebaseOptions(
-        appId: '1:252769608934:android:53a9783d5274bf03eb4727',
+        appId: '1:30048143757:android:ef3afc8c1d92c3238815c4',
         apiKey: 'AIzaSyBs6UZFRzccqOCcGJpunHuw639t8Gw8Eno',
         projectId: 'pod-mobile-app-c9d53',
         messagingSenderId: '30048143757',

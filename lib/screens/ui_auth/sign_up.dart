@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pod_market/screens/ui_auth/login.dart';
 import '../../constants/constants.dart';
 import '../../constants/routes.dart';
-import '../../firebase/firebase_auth_helper.dart';
+import '../../firebase_support/firebase_auth_helper.dart';
 import '../../widgets/primary_button.dart';
 
 
