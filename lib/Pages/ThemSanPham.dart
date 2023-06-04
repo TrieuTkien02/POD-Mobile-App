@@ -423,6 +423,10 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                           price: 10.0, // Giá sản phẩm
                           category: 'Danh mục sản phẩm',
                           image: _selectedImage!,
+                          material: 'Chất liệu',
+                          size: 'Size',
+                          productionunit: 'Đơn vị sản xuất',
+                          color: 'Màu',
                         );
 
                         // Gọi hàm addProductToFirestore để đăng sản phẩm lên Firestore

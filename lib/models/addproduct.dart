@@ -10,6 +10,10 @@ class Product {
   final double price;
   final String category;
   final File image;
+  final String material;
+  final String size;
+  final String productionunit;
+  final String color;
 
   Product({
     required this.name,
@@ -17,6 +21,10 @@ class Product {
     required this.price,
     required this.category,
     required this.image,
+    required this.material,
+    required this.size,
+    required this.productionunit,
+    required this.color,
   });
 }
 
@@ -44,6 +52,10 @@ Future<void> addProductToFirestore(Product product) async {
       'price': product.price,
       'image_url': imageUrl,
       'category': product.category,
+      'material' : product.material,
+      'size': product.size,
+      'productionunit': product.productionunit,
+      'color': product.color,
     });
 
 // Lấy ID của tài liệu mới tạo
