@@ -421,7 +421,7 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                           name: 'Tên sản phẩm',
                           description: 'Mô tả sản phẩm',
                           price: 10.0, // Giá sản phẩm
-                          category: 'Danh mục sản phẩm',
+                          category: 'Quần Tây',
                           image: _selectedImage!,
                           material: 'Chất liệu',
                           size: 'Size',

@@ -34,57 +34,76 @@ Future<void> addProductToFirestore(Product product) async {
     await Firebase.initializeApp();
 
     // Upload hình ảnh lên Firebase Storage
-    final String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-    final Reference storageRef =
-    FirebaseStorage.instance.ref().child('product_images/$imageName.jpg');
+    final String imageName = DateTime
+        .now()
+        .millisecondsSinceEpoch
+        .toString();
+    final Reference storageRef = FirebaseStorage.instance.ref().child(
+        'product_images/$imageName.jpg');
     final UploadTask uploadTask = storageRef.putFile(product.image);
     final TaskSnapshot storageSnapshot = await uploadTask.whenComplete(() {});
     final String imageUrl = await storageSnapshot.ref.getDownloadURL();
 
-    // Tạo một tham chiếu đến collection 'products'
-    final CollectionReference productsRef =
-    FirebaseFirestore.instance.collection('categories');
+    // Tạo một tham chiếu đến collection 'categories'
+    final CollectionReference productsRef = FirebaseFirestore.instance
+        .collection('categories');
 
-// Thêm dữ liệu sản phẩm vào collection 'products'
-    final newProductDoc = await productsRef.add({
-      'name': product.name,
-      'description': product.description,
-      'price': product.price,
-      'image_url': imageUrl,
-      'category': product.category,
-      'material' : product.material,
-      'size': product.size,
-      'productionunit': product.productionunit,
-      'color': product.color,
-    });
+    // // Thêm dữ liệu sản phẩm vào collection 'products'
+    // final newProductDoc = await productsRef.add({
+    //   'name': product.name,
+    //   'description': product.description,
+    //   'price': product.price,
+    //   'image_url': imageUrl,
+    //   'category': product.category,
+    //   'material': product.material,
+    //   'size': product.size,
+    //   'productionunit': product.productionunit,
+    //   'color': product.color,
+    // });
+    //
+    // // Lấy ID của tài liệu mới tạo
+    // final newProductId = newProductDoc.id;
 
-// Lấy ID của tài liệu mới tạo
-    final newProductId = newProductDoc.id;
-
-// Cập nhật tài liệu sản phẩm vào trường "categories"
+    // Cập nhật tài liệu sản phẩm vào trường "categories"
     final categoriesRef = FirebaseFirestore.instance.collection('categories');
     final categoryDoc = await categoriesRef.doc(product.category).get();
     if (categoryDoc.exists) {
-      // Nếu tài liệu category đã tồn tại, thêm sản phẩm vào trường "products" của category
-      await categoryDoc.reference.update({
-        'products': FieldValue.arrayUnion([newProductDoc.id])
+      // Nếu tài liệu category đã tồn tại, thêm sản phẩm vào collection của category
+      final newProductDoc = await categoryDoc.reference.collection('products')
+          .add({
+        'name': product.name,
+        'description': product.description,
+        'price': product.price,
+        'image_url': imageUrl,
+        'category': product.category,
+        'material': product.material,
+        'size': product.size,
+        'productionunit': product.productionunit,
+        'color': product.color,
       });
+
+      print('Thêm sản phẩm vào collection của category thành công!');
     } else {
-      // Nếu tài liệu category chưa tồn tại, tạo mới và thêm sản phẩm vào trường "products" của category
-      await categoriesRef.doc(product.category).set({
-        'products': [newProductDoc.id]
+      // Nếu tài liệu category chưa tồn tại, tạo mới và thêm sản phẩm vào collection của category
+      await categoriesRef.doc(product.category).set({});
+      final newProductDoc = await categoriesRef.doc(product.category)
+          .collection('products')
+          .add({
+        'name': product.name,
+        'description': product.description,
+        'price': product.price,
+        'image_url': imageUrl,
+        'category': product.category,
+        'material': product.material,
+        'size': product.size,
+        'productionunit': product.productionunit,
+        'color': product.color,
       });
+
+      print(
+          'Tạo mới tài liệu category và thêm sản phẩm vào collection thành công!');
     }
-
-
-
-
-
-
-
-    print('Thêm sản phẩm thành công!');
   } catch (error) {
     print('Lỗi khi thêm sản phẩm: $error');
   }
 }
-
