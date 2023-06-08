@@ -3,6 +3,8 @@ import 'package:partnerapp/Values/app_assets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:partnerapp/models/addproduct.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 void main() {
   runApp(ThemSanPham());
 }
@@ -14,7 +16,8 @@ class ThemSanPham extends StatefulWidget {
 
 class _ThemSanPhamState extends State<ThemSanPham> {
   late File? _selectedImage;
-
+  String selectedProduct = 'Chọn loại sản phẩm';
+  String selectedMaterial = 'Chọn chất liệu';
   @override
   void initState() {
     super.initState();
@@ -221,62 +224,189 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                     ),
                   ), // Hàng 1
                 ),
+
+
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Row(
                       children: [
-                        Text('2. Loại sản phẩm : ',
-                          style: TextStyle(color: Colors.black, fontSize: 16),), // Widget Text
-                        SizedBox(width: 10), // Khoảng cách giữa Text và Button
-                        ElevatedButton(
-
-                          onPressed: () {
-                            // Xử lý sự kiện khi nhấn nút
-                          },
-                          child: Text('Chọn loại sản phẩm',
-                            style: TextStyle(color: Colors.black, fontSize: 16),),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white, // Màu nền trắng
-                            onPrimary: Colors.black, // Màu chữ đen
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // Viền đen bo tròn
-                            ),
-                          ),// Widget Button
+                        Text(
+                          '2. Loại sản phẩm: ',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return FutureBuilder<QuerySnapshot>(
+                                  future: FirebaseFirestore.instance.collection('Danhmucsanpham').get(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      List<Widget> children = [];
+                                      snapshot.data!.docs.forEach((doc) {
+                                        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                                        String documentId = doc.id;
 
+                                        children.add(
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              // Xử lý khi người dùng chọn một loại sản phẩm
+                                              setState(() {
+                                                selectedProduct = documentId; // Update selectedProduct
+                                              });
+                                              Navigator.pop(context, documentId);
+                                            },
+                                            child: Text(
+                                              documentId,
+                                              style: TextStyle(color: Colors.black),
+                                            ),
+                                            style: ButtonStyle(
+                                              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                            ),
+                                          ),
+                                        );
+                                      });
+
+                                      return AlertDialog(
+                                        title: Text('Chọn loại sản phẩm'),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: children,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            ).then((selectedProduct) {
+                              // Xử lý khi người dùng đã chọn một loại sản phẩm
+                              if (selectedProduct != null) {
+                                // Thực hiện hành động khác với loại sản phẩm đã chọn
+                              }
+                            });
+                          },
+                          child: Text(
+                            selectedProduct,
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                            foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ), // Hàng 1
+                  ),
                 ),
+
+
+
+
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Row(
                       children: [
-                        Text('3. Chất liệu : ',
-                          style: TextStyle(color: Colors.black, fontSize: 16),), // Widget Text
-                        SizedBox(width: 10), // Khoảng cách giữa Text và Button
-                        ElevatedButton(
-
-                          onPressed: () {
-                            // Xử lý sự kiện khi nhấn nút
-                          },
-                          child: Text('Chọn chất liệu',
-                            style: TextStyle(color: Colors.black, fontSize: 16),),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white, // Màu nền trắng
-                            onPrimary: Colors.black, // Màu chữ đen
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // Viền đen bo tròn
-                            ),
-                          ),// Widget Button
+                        Text(
+                          '3. Chất liệu: ',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return FutureBuilder<QuerySnapshot>(
+                                  future: FirebaseFirestore.instance
+                                      .collection('Danhmucsanpham')
+                                      .doc(selectedProduct)
+                                      .collection('Chất liệu')
+                                      .get(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      List<Widget> children = [];
+                                      List<QueryDocumentSnapshot> docs = snapshot.data!.docs;
+                                      docs.forEach((doc) {
+                                        String materialName = doc.id;
 
+                                        children.add(
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                selectedMaterial = materialName; // Update selectedProduct
+                                              });
+                                              // Xử lý khi người dùng chọn một chất liệu
+                                              Navigator.pop(context, materialName);
+                                            },
+                                            child: Text(
+                                              materialName,
+                                              style: TextStyle(color: Colors.black),
+                                            ),
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                              MaterialStateProperty.all<Color>(Colors.white),
+                                            ),
+                                          ),
+                                        );
+                                      });
+
+                                      return AlertDialog(
+                                        title: Text('Chọn chất liệu'),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: children,
+                                        ),
+                                        actions: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('Đóng'),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            );
+                          },
+                          child: Text(
+                            selectedMaterial,
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ), // Hàng 3
+                  ),
                 ),
+
+
+
                 // ... Tiếp tục thêm các hàng còn lại tương tự
                 Expanded(
                   child: Container(
