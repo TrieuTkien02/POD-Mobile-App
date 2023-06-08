@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:partnerapp/Values/app_assets.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,6 +26,8 @@ class _ThemSanPhamState extends State<ThemSanPham> {
   List<String> colors = [];
   String? price ='Nhập giá';
   String selectedUnit ="";
+  String description = '';
+  String nameProduct = '';
   @override
   void initState() {
     super.initState();
@@ -592,6 +596,49 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                   ),
                 ),
 
+
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '6. Tên sản phẩm: ',
+                                style: TextStyle(color: Colors.black, fontSize: 16),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              flex: 2,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Nhập tên',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 20),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    nameProduct = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ),
+
+
+
+
                 Expanded(
                   flex: 4,
                   child: SingleChildScrollView(
@@ -599,7 +646,7 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          '6. Mô tả sản phẩm: ',
+                          '7. Mô tả sản phẩm: ',
                           style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                         SizedBox(height: 10),
@@ -614,19 +661,27 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                             ),
                           ),
                           textInputAction: TextInputAction.newline,
+                          onChanged: (value) {
+                            setState(() {
+                              description = value;
+                            });
+                          },
                         ),
                       ],
                     ),
                   ),
                 ),
+
                 SizedBox(height: 5),
+
+
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Row(
                       children: [
                         Text(
-                          '7. Giá sản phẩm ',
+                          '8. Giá sản phẩm ',
                           style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                         SizedBox(width: 10),
@@ -737,7 +792,7 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                     child: Row(
                       children: [
                         Text(
-                          '8. Chọn đơn vị sản xuất: ',
+                          '9. Chọn đơn vị sản xuất: ',
                           style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                         SizedBox(width: 10),
@@ -832,17 +887,20 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                     alignment: Alignment.center,
                     child: ElevatedButton(
                       onPressed: () {
+                        String sizesString = sizes.join(' ');
+                        String colorString = colors.join(' ');
+                        double pri = double.parse(price!);
                         // Tạo một đối tượng Product từ dữ liệu nhập vào
                         Product newProduct = Product(
-                          name: 'Tên sản phẩm',
-                          description: 'Mô tả sản phẩm',
-                          price: 10.0, // Giá sản phẩm
-                          category: 'Quần Tây',
+                          name: nameProduct,
+                          description: description,
+                          price: pri, // Giá sản phẩm
+                          category: selectedProduct,
                           image: _selectedImage!,
-                          material: 'Chất liệu',
-                          size: 'Size',
-                          productionunit: 'Đơn vị sản xuất',
-                          color: 'Màu',
+                          material: selectedMaterial,
+                          size: sizesString,
+                          productionunit: selectedUnit,
+                          color: colorString,
                         );
 
                         // Gọi hàm addProductToFirestore để đăng sản phẩm lên Firestore
