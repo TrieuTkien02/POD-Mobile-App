@@ -4,7 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:partnerapp/models/addproduct.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 void main() {
   runApp(ThemSanPham());
 }
@@ -18,6 +20,10 @@ class _ThemSanPhamState extends State<ThemSanPham> {
   late File? _selectedImage;
   String selectedProduct = 'Chọn loại sản phẩm';
   String selectedMaterial = 'Chọn chất liệu';
+  List<String> sizes = [];
+  List<String> colors = [];
+  String? price ='Nhập giá';
+  String selectedUnit ="";
   @override
   void initState() {
     super.initState();
@@ -407,87 +413,213 @@ class _ThemSanPhamState extends State<ThemSanPham> {
 
 
 
-                // ... Tiếp tục thêm các hàng còn lại tương tự
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      children: [
-                        Text('4. Kích cỡ : ',
-                          style: TextStyle(color: Colors.black, fontSize: 16),), // Widget Text
-                        SizedBox(width: 10), // Khoảng cách giữa Text và Button
-                        ElevatedButton(
 
-                          onPressed: () {
-                            // Xử lý sự kiện khi nhấn nút
-                          },
-                          child: Text('+ Thêm ',
-                            style: TextStyle(color: Colors.black, fontSize: 16),),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white, // Màu nền trắng
-                            onPrimary: Colors.black, // Màu chữ đen
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // Viền đen bo tròn
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start, // Căn lề bên trái
+                        children: [
+                          Text(
+                            '4. Kích cỡ: ',
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                          SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  TextEditingController sizeController = TextEditingController();
+                                  return AlertDialog(
+                                    title: Text('Thêm kích cỡ'),
+                                    content: TextFormField(
+                                      controller: sizeController,
+                                      decoration: InputDecoration(labelText: 'Kích cỡ'),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: Text('Hủy'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        child: Text('Thêm'),
+                                        onPressed: () {
+                                          if (sizeController.text.isNotEmpty) {
+                                            setState(() {
+                                              sizes.add(sizeController.text);
+                                            });
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              '+ Thêm',
+                              style: TextStyle(color: Colors.black, fontSize: 16),
                             ),
-                          ),// Widget Button
-                        ),
-
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      children: [
-                        Text('5. Màu sắc : ',
-                          style: TextStyle(color: Colors.black, fontSize: 16),), // Widget Text
-                        SizedBox(width: 10), // Khoảng cách giữa Text và Button
-                        ElevatedButton(
-
-                          onPressed: () {
-                            // Xử lý sự kiện khi nhấn nút
-                          },
-                          child: Text('+ Thêm ',
-                            style: TextStyle(color: Colors.black, fontSize: 16),),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white, // Màu nền trắng
-                            onPrimary: Colors.black, // Màu chữ đen
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // Viền đen bo tròn
-                            ),
-                          ),// Widget Button
-                        ),
-
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      children: [
-                        Text(
-                          '6. Mô tả sản phẩm: ',
-                          style: TextStyle(color: Colors.black, fontSize: 16),
-                        ), // Widget Text
-                        SizedBox(width: 10), // Khoảng cách giữa Text và TextField
-                        Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Nhập mô tả',
-                              border: OutlineInputBorder(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              onPrimary: Colors.black,
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
+                          SizedBox(width: 10),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: sizes
+                                .map(
+                                  (size) => Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  size,
+                                  style: TextStyle(color: Colors.black, fontSize: 16),
+                                ),
+                              ),
+                            )
+                                .toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+
+
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        children: [
+                          Text(
+                            '5. Màu sắc: ',
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                          SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  Color selectedColor = Colors.transparent; // Màu mặc định
+
+                                  return AlertDialog(
+                                    title: Text('Chọn màu sắc'),
+                                    content: SingleChildScrollView(
+                                      child: MaterialPicker(
+                                        pickerColor: selectedColor,
+                                        onColorChanged: (Color color) {
+                                          selectedColor = color;
+                                        },
+                                        enableLabel: true, // Hiển thị tên màu
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: Text('Hủy'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        child: Text('Thêm'),
+                                        onPressed: () {
+                                          setState(() {
+                                            String hex = '#${selectedColor.value.toRadixString(16).substring(2)}';
+                                            colors.add(hex);
+                                          });
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              '+ Thêm',
+                              style: TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              onPrimary: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: colors
+                                .map(
+                                  (color) => Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  color,
+                                  style: TextStyle(color: Colors.black, fontSize: 16),
+                                ),
+                              ),
+                            )
+                                .toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                Expanded(
+                  flex: 4,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          '6. Mô tả sản phẩm: ',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        TextFormField(
+                          minLines: 5,
+                          maxLines: null,
+                          keyboardType: TextInputType.multiline,
+                          decoration: InputDecoration(
+                            hintText: 'Nhập mô tả',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          textInputAction: TextInputAction.newline,
                         ),
                       ],
                     ),
                   ),
                 ),
+                SizedBox(height: 5),
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
@@ -496,14 +628,97 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                         Text(
                           '7. Giá sản phẩm ',
                           style: TextStyle(color: Colors.black, fontSize: 16),
-                        ), // Widget Text
-                        SizedBox(width: 10), // Khoảng cách giữa Text và TextField
+                        ),
+                        SizedBox(width: 10),
                         Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Nhập giá ...',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                          child: InkWell(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  TextEditingController priceController = TextEditingController();
+                                  return AlertDialog(
+                                    title: Text('Nhập giá sản phẩm'),
+                                    content: TextField(
+                                      controller: priceController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        hintText: 'Nhập giá tiền (VNĐ)',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: Text('Hủy'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        child: Text('Lưu'),
+                                        onPressed: () {
+                                          setState(() {
+                                            price = priceController.text;
+                                          });
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                onPrimary: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    TextEditingController priceController = TextEditingController(text: price);
+                                    return AlertDialog(
+                                      title: Text('Nhập giá sản phẩm'),
+                                      content: TextField(
+                                        controller: priceController,
+                                        keyboardType: TextInputType.number,
+                                        decoration: InputDecoration(
+                                          hintText: 'Nhập giá tiền (VNĐ)',
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          child: Text('Hủy'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        ElevatedButton(
+                                          child: Text('Lưu'),
+                                          onPressed: () {
+                                            setState(() {
+                                              price = priceController.text;
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text(
+                                price != null ? '$price VNĐ' : 'Chọn giá tiền (VNĐ)',
+                                style: TextStyle(color: Colors.black),
                               ),
                             ),
                           ),
@@ -512,34 +727,105 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                     ),
                   ),
                 ),
+
+
+
+
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Row(
                       children: [
-                        Text('8. Chọn đơn vị sản suất : ',
-                          style: TextStyle(color: Colors.black, fontSize: 16),), // Widget Text
-                        SizedBox(width: 10), // Khoảng cách giữa Text và Button
-                        ElevatedButton(
-
-                          onPressed: () {
-                            // Xử lý sự kiện khi nhấn nút
-                          },
-                          child: Text('Chọn đơn vị sản xuất',
-                            style: TextStyle(color: Colors.black, fontSize: 16),),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white, // Màu nền trắng
-                            onPrimary: Colors.black, // Màu chữ đen
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // Viền đen bo tròn
-                            ),
-                          ),// Widget Button
+                        Text(
+                          '8. Chọn đơn vị sản xuất: ',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return FutureBuilder<QuerySnapshot>(
+                                  future: FirebaseFirestore.instance
+                                      .collection('Danhmucsanpham')
+                                      .doc(selectedProduct)
+                                      .collection('Đơn vị sản xuất')
+                                      .get(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      List<Widget> children = [];
+                                      List<QueryDocumentSnapshot> docs = snapshot.data!.docs;
+                                      docs.forEach((doc) {
+                                        String unitName = doc.id;
 
+                                        children.add(
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                selectedUnit = unitName; // Update selectedProduct
+                                              });
+                                              // Xử lý khi người dùng chọn một chất liệu
+                                              Navigator.pop(context, unitName);
+                                            },
+                                            child: Text(
+                                              unitName,
+                                              style: TextStyle(color: Colors.black),
+                                            ),
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                              MaterialStateProperty.all<Color>(Colors.white),
+                                            ),
+                                          ),
+                                        );
+                                      });
+
+                                      return AlertDialog(
+                                        title: Text('Chọn đơn vị sản xuất'),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: children,
+                                        ),
+                                        actions: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('Đóng'),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            );
+                          },
+                          child: Text(
+                            selectedUnit,
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ), // Hàng 3
+                  ),
                 ),
+
+
+
+
+
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),

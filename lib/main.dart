@@ -5,17 +5,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase/firebase_auth_helper.dart';
 import 'firebase/firebase_options.dart';
 import 'package:partnerapp/models/pullcategorylist.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: DefaultFirebaseConfig.platformOptions
+    options: DefaultFirebaseConfig.platformOptions,
   );
 
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

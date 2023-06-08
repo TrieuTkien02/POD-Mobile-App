@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.1 <4.0.0'
+  sdk: '>=2.12.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -47,10 +47,9 @@ dependencies:
   http: ^0.13.5
   flutter_native_splash: ^2.2.19
   flutter_stripe: ^9.2.0
-
-
-
-
+  flutter_colorpicker: ^1.0.3
+  flutter_material_color_picker: ^1.2.0
+  flutter_form_builder: ^8.0.0
 
 
 
