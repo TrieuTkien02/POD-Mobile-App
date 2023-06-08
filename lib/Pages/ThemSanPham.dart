@@ -319,7 +319,7 @@ class _ThemSanPhamState extends State<ThemSanPham> {
 
 
 
-
+      // Chọn chất liệu (lấy từ database)
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
@@ -729,7 +729,7 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                 ),
 
 
-
+        // Chọn đơn vị sản xuât ( lấy từ firebase)
 
                 Expanded(
                   child: Container(
