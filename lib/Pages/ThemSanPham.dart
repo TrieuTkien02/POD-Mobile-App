@@ -905,6 +905,7 @@ class _ThemSanPhamState extends State<ThemSanPham> {
 
                         // Gọi hàm addProductToFirestore để đăng sản phẩm lên Firestore
                         addProductToFirestore(newProduct);
+                        addProductToPartner(newProduct,'username');
                       },
                       child: Text(
                         'Đăng bán',
