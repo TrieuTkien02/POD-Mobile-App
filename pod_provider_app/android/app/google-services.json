@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "30048143757",
+    "project_id": "pod-mobile-app-c9d53",
+    "storage_bucket": "pod-mobile-app-c9d53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30048143757:android:26b76c4533ba35288815c4",
+        "android_client_info": {
+          "package_name": "com.example.partnerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs6UZFRzccqOCcGJpunHuw639t8Gw8Eno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30048143757:android:ef3afc8c1d92c3238815c4",
+        "android_client_info": {
+          "package_name": "com.example.pod_market"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs6UZFRzccqOCcGJpunHuw639t8Gw8Eno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30048143757:android:e34b35601c12382b8815c4",
+        "android_client_info": {
+          "package_name": "com.example.pod_provider_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs6UZFRzccqOCcGJpunHuw639t8Gw8Eno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
