@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:partnerapp/Values/app_assets.dart';
 import '../../constants/routes.dart';
 import 'package:partnerapp/Pages/ThemSanPham.dart';
-
+import 'package:partnerapp/models/PullProduct.dart';
 void main() {
   runApp(MyHomePage());
 }
@@ -12,11 +12,90 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+void _showProductDialog(BuildContext context, Product product) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.network(
+              product.imageUrl,
+              width: double.infinity,
+              height: 200.0,
+              fit: BoxFit.cover,
+            ),
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Description: ${product.description}',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Price: \$${product.price.toStringAsFixed(2)} VNĐ',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Category: ${product.category}',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Material: ${product.material}',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Size: ${product.size}',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Production Unit: ${product.productionunit}',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    'Color: ${product.color}',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  // Hiển thị các trường khác của product tương tự
+                ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Example',
+      title: 'Trang Chủ',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -164,27 +243,76 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                children: List.generate(10, (index) {
-                  return Container(
-                    margin: EdgeInsets.all(8.0),
-                    color: Colors.grey,
-                    child: Center(
-                      child: Text(
-                        'Product ${index + 1}',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.white,
+        Expanded(
+          child: FutureBuilder<List<Product>>(
+            future: fetchProducts('username'),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final products = snapshot.data!;
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return GestureDetector(
+                      onTap: () {
+                        _showProductDialog(context, product);
+                      },
+                      child: Card(
+                        elevation: 4.0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.network(
+                              product.imageUrl,
+                              width: double.infinity,
+                              height: 135.0,
+                              fit: BoxFit.cover,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product.name,
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.0),
+                                  Text(
+                                    '\$${product.price.toStringAsFixed(2)} VNĐ',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-            Container(
+                    );
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Text("Error fetching products: ${snapshot.error}");
+              } else {
+                return CircularProgressIndicator();
+              }
+            },
+          ),
+        ),
+
+
+
+
+        Container(
               padding: EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

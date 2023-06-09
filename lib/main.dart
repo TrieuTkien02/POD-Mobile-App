@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:partnerapp/Pages/ThemSanPham.dart';
+import 'package:partnerapp/Pages/TrangChu.dart';
+
 import 'constants/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase/firebase_auth_helper.dart';
@@ -28,9 +30,9 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuthHelper.instance.getAuthChange,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ThemSanPham();
+            return MyHomePage();
           }
-          return ThemSanPham();
+          return MyHomePage();
         },
       ),
     );
