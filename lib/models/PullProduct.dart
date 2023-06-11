@@ -28,7 +28,58 @@ class Product {
   });
 }
 
-Future<List<Product>> fetchProducts(String username) async {
+Future<List<Product>> fetchProducts(String username, String Loaisanpham) async {
+  // Initialize Firebase
+  await Firebase.initializeApp();
+
+  // Replace 'partners' with your Firestore collection name
+  // and 'Giày thể thao' with the desired category
+  QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection('Partner')
+      .doc(username)
+      .collection('categories')
+      .doc(Loaisanpham)
+      .collection('products')
+      .get();
+
+  List<Product> products = [];
+
+  for (QueryDocumentSnapshot doc in snapshot.docs) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+    // Retrieve the necessary product properties from the data map
+    String name = data['name'];
+    String description = data['description'];
+    double price = data['price'];
+    String category = data['category'];
+    String material = data['material'];
+    String size = data['size'];
+    String productionunit = data['productionunit'];
+    String color = data['color'];
+
+    // Retrieve the image URL from the 'image_url' field
+    String imageUrl = data['image_url'];
+
+    // Create a new Product instance with the retrieved properties and image URL
+    Product product = Product(
+      name: name,
+      description: description,
+      price: price,
+      category: category,
+      imageUrl: imageUrl,
+      material: material,
+      size: size,
+      productionunit: productionunit,
+      color: color,
+    );
+
+    products.add(product);
+  }
+
+  return products;
+}
+
+Future<List<Product>> fetchAllProducts(String username) async {
   // Initialize Firebase
   await Firebase.initializeApp();
 

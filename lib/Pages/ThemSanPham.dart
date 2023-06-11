@@ -1,5 +1,5 @@
 import 'dart:ffi';
-
+import 'package:partnerapp/Pages/TrangChu.dart';
 import 'package:flutter/material.dart';
 import 'package:partnerapp/Values/app_assets.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:partnerapp/Pages/Sanpham.dart';
 void main() {
   runApp(ThemSanPham());
 }
@@ -155,27 +156,44 @@ class _ThemSanPhamState extends State<ThemSanPham> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(
+                    'Cửa hàng',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
 
-                child: Text(
-                  'Cửa hàng',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  'Sản Phẩm',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Sanpham()),
+                    );
+                  },
+                  child: Text(
+                    'Sản Phẩm',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
+
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: Text(
@@ -931,21 +949,47 @@ class _ThemSanPhamState extends State<ThemSanPham> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Column(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.home),
-                      color: Colors.blue,
-                      onPressed: () {},
-                    ),
-                    Text(
-                      'Trang chủ',
-                      style: TextStyle(
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.home),
                         color: Colors.blue,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyHomePage()),
+                          );
+                        },
                       ),
-                    ),
-                  ],
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyHomePage()),
+                          );
+                        },
+                        child: Text(
+                          'Trang chủ',
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+
+
+
+
+
                 Column(
                   children: [
                     IconButton(

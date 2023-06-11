@@ -3,17 +3,22 @@ import 'package:partnerapp/Values/app_assets.dart';
 import '../../constants/routes.dart';
 import 'package:partnerapp/Pages/ThemSanPham.dart';
 import 'package:partnerapp/models/PullProduct.dart';
-import 'package:partnerapp/Pages/Sanpham.dart';
+import 'package:partnerapp/Pages/TrangChu.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 void main() {
-  runApp(MyHomePage());
+  runApp(Sanpham());
 }
 
-class MyHomePage extends StatefulWidget {
+class Sanpham extends StatefulWidget {
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 void _showProductDialog(BuildContext context, Product product) {
+
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -92,7 +97,8 @@ void _showProductDialog(BuildContext context, Product product) {
 }
 
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<Sanpham> {
+  String LoaiSanPham="";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -222,7 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       'Cửa hàng',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -243,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       'Sản phẩm',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Colors.red,
                       ),
                     ),
                   ),
@@ -265,76 +271,143 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-        Expanded(
-          child: FutureBuilder<List<Product>>(
-            future: fetchAllProducts('username'),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final products = snapshot.data!;
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    return GestureDetector(
-                      onTap: () {
-                        _showProductDialog(context, product);
-                      },
-                      child: Card(
-                        elevation: 4.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.network(
-                              product.imageUrl,
-                              width: double.infinity,
-                              height: 135.0,
-                              fit: BoxFit.cover,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    product.name,
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
+
+            Expanded(
+              child: Column(
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: FutureBuilder<QuerySnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('Partner')
+                          .doc('username')
+                          .collection('categories')
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else {
+                          List<Widget> children = [];
+                          bool hasError = false;
+
+                          if (snapshot.hasError) {
+                            hasError = true;
+                            print('Error: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            snapshot.data!.docs.forEach((doc) {
+                              String documentId = doc.id;
+                              children.add(
+                                GestureDetector(
+                                  onTap: () {
+                                    // Xử lý khi Text được nhấp vào
+                                    setState(() {
+                                      LoaiSanPham = documentId; // Cập nhật giá trị của biến loaiSanPham
+                                    });
+                                    print('Clicked on: $documentId');
+                                    // Hoặc thực hiện các xử lý khác tùy ý ở đây
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: Text(
+                                      documentId,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
-                                  SizedBox(height: 4.0),
-                                  Text(
-                                    '\$${product.price.toStringAsFixed(2)} VNĐ',
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
+                                ),
+                              );
+                            });
+                          }
+
+                          return Row(
+                            children: [
+                              Offstage(
+                                offstage: !hasError,
+                                child: Container(),
                               ),
+                              ...children,
+                            ],
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: FutureBuilder<List<Product>>(
+                      future: fetchProducts('username', LoaiSanPham),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final products = snapshot.data!;
+                          return GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              } else if (snapshot.hasError) {
-                return Text("Error fetching products: ${snapshot.error}");
-              } else {
-                return CircularProgressIndicator();
-              }
-            },
-          ),
-        ),
+                            itemCount: products.length,
+                            itemBuilder: (context, index) {
+                              final product = products[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  _showProductDialog(context, product);
+                                },
+                                child: Card(
+                                  elevation: 4.0,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Image.network(
+                                        product.imageUrl,
+                                        width: double.infinity,
+                                        height: 135.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              product.name,
+                                              style: TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4.0),
+                                            Text(
+                                              '\$${product.price.toStringAsFixed(2)} VNĐ',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
 
 
 
-        Container(
+
+
+
+            Container(
               padding: EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
