@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:pod_market/provider/app_provider.dart';
 import 'package:pod_market/screens/custom_bottom_bar.dart';
 import 'package:pod_market/screens/ui_auth/welcome.dart';
+import 'package:provider/provider.dart';
 import 'constants/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'firebase_support/firebase_auth_helper.dart';
 import 'firebase_support/firebase_options.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseConfig.platformOptions
@@ -21,18 +22,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'POD Market',
-      theme: themeData,
-      home: StreamBuilder(
-        stream: FirebaseAuthHelper.instance.getAuthChange,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return const CustomBottomBar();
-          }
-          return const Welcome();
-        },
+    return ChangeNotifierProvider(
+      create: (context) => AppProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'POD Market',
+        theme: themeData,
+        home: StreamBuilder(
+          stream: FirebaseAuthHelper.instance.getAuthChange,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return const CustomBottomBar();
+            }
+            return const Welcome();
+          },
+        ),
       ),
     );
   }

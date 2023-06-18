@@ -2,10 +2,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pod_market/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import '../constants/constants.dart';
 import '../constants/routes.dart';
 import '../models/product_model.dart';
+import 'cart_screen/cart_screen.dart';
 
 class ProductDetails extends StatefulWidget {
   final ProductModel singleProduct;
@@ -21,16 +23,16 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    // AppProvider appProvider = Provider.of<AppProvider>(
-    //   context,
-    // );
+    AppProvider appProvider = Provider.of<AppProvider>(
+      context,
+    );
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
             onPressed: () {
-              // Routes.instance
-              //     .push(widget: const CartScreen(), context: context);
+              Routes.instance
+                  .push(widget: const CartScreen(), context: context);
             },
             icon: const Icon(
               Icons.shopping_cart,
@@ -58,7 +60,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.network(
-                widget.singleProduct.image,
+                widget.singleProduct.imageUrl,
                 height: 400,
                 width: 400,
               ),
@@ -122,25 +124,25 @@ class _ProductDetailsState extends State<ProductDetails> {
                   const SizedBox(
                     width: 200,
                   ),
-                  // IconButton(
-                  //   onPressed: () {
-                  //     setState(() {
-                  //       widget.singleProduct.isFavourite =
-                  //           !widget.singleProduct.isFavourite;
-                  //     });
-                  //     if (widget.singleProduct.isFavourite) {
-                  //       appProvider.addFavouriteProduct(widget.singleProduct);
-                  //     } else {
-                  //       appProvider
-                  //           .removeFavouriteProduct(widget.singleProduct);
-                  //     }
-                  //   },
-                  //   icon: Icon(appProvider.getFavouriteProductList
-                  //           .contains(widget.singleProduct)
-                  //       ? Icons.favorite
-                  //       : Icons.favorite_border),
-                  //   iconSize: 40,
-                  // ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        widget.singleProduct.isFavourite =
+                            !widget.singleProduct.isFavourite;
+                      });
+                      if (widget.singleProduct.isFavourite) {
+                        appProvider.addFavouriteProduct(widget.singleProduct);
+                      } else {
+                        appProvider
+                            .removeFavouriteProduct(widget.singleProduct);
+                      }
+                    },
+                    icon: Icon(appProvider.getFavouriteProductList
+                            .contains(widget.singleProduct)
+                        ? Icons.favorite
+                        : Icons.favorite_border),
+                    iconSize: 40,
+                  ),
                 ],
               ),
               const SizedBox(
@@ -153,7 +155,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     onPressed: () {
                       ProductModel productModel =
                           widget.singleProduct.copyWith(qty: qty);
-                      //appProvider.addCartProduct(productModel);
+                      appProvider.addCartProduct(productModel);
                       showMessage("Đã thêm vào giỏ hàng");
                     },
                     child: const Text("Thêm vào giỏ hàng"),
@@ -170,8 +172,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                             MaterialStateProperty.all<Color>(Colors.red),
                       ),
                       onPressed: () {
-                        // ProductModel productModel =
-                        //     widget.singleProduct.copyWith(qty: qty);
+                        ProductModel productModel =
+                            widget.singleProduct.copyWith(qty: qty);
                         // Routes.instance.push(
                         //     widget: Checkout(singleProduct: productModel),
                         //     context: context);
@@ -203,7 +205,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 child: Text(
                   isExpanded
                       ? widget.singleProduct.description
-                      : '${widget.singleProduct.description.substring(0, 70)}...',
+                      : '${widget.singleProduct.description.substring(0, 1)}...',
                   textAlign: TextAlign.left,
                   softWrap: true,
                   textScaleFactor: 1.2,

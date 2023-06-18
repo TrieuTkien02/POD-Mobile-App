@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pod_market/models/sale_model.dart';
+import 'package:pod_market/provider/app_provider.dart';
 import 'package:pod_market/screens/category_view.dart';
 import 'package:pod_market/screens/product_details.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import '../constants/routes.dart';
 import '../firebase_support/firebase_firestore.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
+import 'cart_screen/cart_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -24,8 +26,8 @@ class _HomeState extends State<Home> {
   bool isLoading = false;
   @override
   void initState() {
-    // AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
-    // appProvider.getUserInfoFirebase();
+    AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
+    //appProvider.getUserInfoFirebase();
     getCategoryList();
     super.initState();
   }
@@ -91,7 +93,8 @@ class _HomeState extends State<Home> {
           IconButton(
             alignment: Alignment.center,
             onPressed: () {
-              // TODO: Xử lý khi nhấn biểu tượng giỏ hàng
+              Routes.instance
+                  .push(widget: const CartScreen(), context: context);
             },
             icon: const Icon(
               Icons.shopping_cart,
@@ -284,7 +287,7 @@ class _HomeState extends State<Home> {
                                             height: 10.0,
                                           ),
                                           Image.network(
-                                            singleProduct.image,
+                                            singleProduct.imageUrl,
                                             height: 100,
                                             width: 100,
                                           ),
@@ -305,7 +308,7 @@ class _HomeState extends State<Home> {
                                             height: 12.0,
                                           ),
                                           Text(
-                                            "\$${singleProduct.price}",
+                                            "${singleProduct.price} VNĐ",
                                             style: const TextStyle(
                                               color: Colors.red,
                                               fontSize: 16.0,
@@ -373,7 +376,7 @@ class _HomeState extends State<Home> {
                                                 height: 12.0,
                                               ),
                                               Image.network(
-                                                singleProduct.image,
+                                                singleProduct.imageUrl,
                                                 height: 100,
                                                 width: 100,
                                               ),
@@ -394,7 +397,7 @@ class _HomeState extends State<Home> {
                                                 height: 12.0,
                                               ),
                                               Text(
-                                                "\$${singleProduct.price}",
+                                                "${singleProduct.price} VNĐ",
                                                 style: const TextStyle(
                                                   color: Colors.red,
                                                   fontSize: 16.0,

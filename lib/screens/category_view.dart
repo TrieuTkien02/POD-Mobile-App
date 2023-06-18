@@ -22,7 +22,7 @@ class _CategoryViewState extends State<CategoryView> {
       isLoading = true;
     });
     productModelList = await FirebaseFirestoreHelper.instance
-        .getCategoryViewProduct(widget.categoryModel.id);
+        .getCategoryViewProduct(widget.categoryModel.name);
     productModelList.shuffle();
     setState(() {
       isLoading = false;
@@ -100,7 +100,7 @@ class _CategoryViewState extends State<CategoryView> {
                                         height: 10.0,
                                       ),
                                       Image.network(
-                                        singleProduct.image,
+                                        singleProduct.imageUrl,
                                         height: 100,
                                         width: 100,
                                       ),
@@ -121,7 +121,7 @@ class _CategoryViewState extends State<CategoryView> {
                                         height: 12.0,
                                       ),
                                       Text(
-                                        "\$${singleProduct.price}",
+                                        "${singleProduct.price} VNĐ",
                                         style: const TextStyle(
                                           color: Colors.red,
                                           fontSize: 16.0,

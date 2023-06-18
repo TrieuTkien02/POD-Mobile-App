@@ -60,12 +60,12 @@ class FirebaseFirestoreHelper {
     }
   }
 
-  Future<List<ProductModel>> getCategoryViewProduct(String id) async {
+  Future<List<ProductModel>> getCategoryViewProduct(String name) async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await _firebaseFirestore
               .collection("categories")
-              .doc(id)
+              .doc(name)
               .collection("products")
               .get();
 
