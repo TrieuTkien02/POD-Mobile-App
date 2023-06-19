@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'account/account_screen.dart';
 import 'favourite_screen/favourite_screen.dart';
 import 'home.dart';
 class CustomBottomBar extends StatefulWidget {
@@ -20,7 +21,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
         const Home(),
         const FavouriteScreen(),
         const Home(),
-        const Home(),
+        const AccountScreen(),
         // const CartScreen(),
         // const OrderScreen(),
         // const AccountScreen(),

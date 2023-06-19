@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/constants.dart';
-import '../../constants/routes.dart';
 import '../../provider/app_provider.dart';
 import 'single_cart_item.dart';
+import 'package:intl/intl.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -17,6 +17,9 @@ class _CartScreenState extends State<CartScreen> {
     AppProvider appProvider = Provider.of<AppProvider>(
       context,
     );
+    final priceFormat = NumberFormat("#,###");
+    final formattedPrice = priceFormat.format(appProvider.totalPrice().toInt()).replaceAll(',', '.');
+    
 
     return Scaffold(
       bottomNavigationBar: SizedBox(
@@ -36,7 +39,7 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   Text(
-                    "${appProvider.totalPrice().toString()} VNĐ",
+                    "$formattedPrice VNĐ",
                     style: const TextStyle(
                       color: Colors.red,
                       fontSize: 20.0,

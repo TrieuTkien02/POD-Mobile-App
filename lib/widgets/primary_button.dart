@@ -14,10 +14,14 @@ class PrimaryButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20), 
+            borderRadius: BorderRadius.circular(20),
           ),
+          backgroundColor: Colors.red,
         ),
-        child: Text(title),
+        child: Text(
+          title,
+          style: const TextStyle(fontSize: 20),
+        ),
       ),
     );
   }

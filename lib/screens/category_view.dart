@@ -121,7 +121,7 @@ class _CategoryViewState extends State<CategoryView> {
                                         height: 12.0,
                                       ),
                                       Text(
-                                        "${singleProduct.price} VNĐ",
+                                        "${singleProduct.price.toInt().toStringAsFixed(0)} VNĐ",
                                         style: const TextStyle(
                                           color: Colors.red,
                                           fontSize: 16.0,

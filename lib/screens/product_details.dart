@@ -35,7 +35,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   .push(widget: const CartScreen(), context: context);
             },
             icon: const Icon(
-              Icons.shopping_cart,
+              Icons.shopping_cart_checkout,
               color: Colors.red,
             ),
             iconSize: 35.0,
@@ -43,10 +43,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           IconButton(
             alignment: Alignment.center,
             onPressed: () {
-              // TODO: Xử lý khi nhấn biểu tượng thông báo
+
             },
             icon: const Icon(
-              Icons.notifications,
+              Icons.notifications_active,
               color: Colors.red,
             ),
             iconSize: 35.0,
@@ -137,11 +137,24 @@ class _ProductDetailsState extends State<ProductDetails> {
                             .removeFavouriteProduct(widget.singleProduct);
                       }
                     },
-                    icon: Icon(appProvider.getFavouriteProductList
-                            .contains(widget.singleProduct)
-                        ? Icons.favorite
-                        : Icons.favorite_border),
-                    iconSize: 40,
+                    icon: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0), 
+                        child: Opacity(
+                          opacity: widget.singleProduct.isFavourite
+                              ? 1.0
+                              : 0.8, 
+                          child: Icon(
+                            appProvider.getFavouriteProductList
+                                    .contains(widget.singleProduct)
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            size: 40,
+                            color: Colors.red, 
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -156,7 +169,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ProductModel productModel =
                           widget.singleProduct.copyWith(qty: qty);
                       appProvider.addCartProduct(productModel);
-                      showMessage("Đã thêm vào giỏ hàng");
                     },
                     child: const Text("Thêm vào giỏ hàng"),
                   ),
@@ -172,8 +184,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                             MaterialStateProperty.all<Color>(Colors.red),
                       ),
                       onPressed: () {
-                        ProductModel productModel =
-                            widget.singleProduct.copyWith(qty: qty);
+                        // ProductModel productModel =
+                        //     widget.singleProduct.copyWith(qty: qty);
                         // Routes.instance.push(
                         //     widget: Checkout(singleProduct: productModel),
                         //     context: context);

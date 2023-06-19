@@ -7,6 +7,7 @@ import 'package:pod_market/models/sale_model.dart';
 import '../constants/constants.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
+import '../models/user_model.dart';
 
 class FirebaseFirestoreHelper {
   static FirebaseFirestoreHelper instance = FirebaseFirestoreHelper();
@@ -80,15 +81,16 @@ class FirebaseFirestoreHelper {
     }
   }
 
-  // Future<UserModel> getUserInformation() async {
-  //   DocumentSnapshot<Map<String, dynamic>> querySnapshot =
-  //       await _firebaseFirestore
-  //           .collection("users")
-  //           .doc(FirebaseAuth.instance.currentUser!.uid)
-  //           .get();
+  Future<UserModel> getUserInformation() async {
+    DocumentSnapshot<Map<String, dynamic>> querySnapshot =
+        await _firebaseFirestore
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.email)
+            .get();
 
-  //   return UserModel.fromJson(querySnapshot.data()!);
-  // }
+    return UserModel.fromJson(querySnapshot.data()!);
+  }
+
 
   Future<bool> uploadOrderedProductFirebase(
       List<ProductModel> list, BuildContext context, String payment) async {

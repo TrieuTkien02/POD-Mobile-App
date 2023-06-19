@@ -4,6 +4,7 @@ import 'package:pod_market/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import '../../constants/constants.dart';
 import '../../models/product_model.dart';
+import 'package:intl/intl.dart';
 
 class SingleCartItem extends StatefulWidget {
   final ProductModel singleProduct;
@@ -26,6 +27,8 @@ class _SingleCartItemState extends State<SingleCartItem> {
     AppProvider appProvider = Provider.of<AppProvider>(
       context,
     );
+    final priceFormat = NumberFormat("#,###");
+    final formattedPrice = priceFormat.format(widget.singleProduct.price.toInt()).replaceAll(',', '.');
     return Container(
       margin: const EdgeInsets.only(bottom: 12.0),
       decoration: BoxDecoration(
@@ -172,7 +175,7 @@ class _SingleCartItemState extends State<SingleCartItem> {
                           width: 30.0,
                         ),
                         Text(
-                          "${widget.singleProduct.price.toString()} VNĐ",
+                          "$formattedPrice VNĐ",
                           style: const TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,

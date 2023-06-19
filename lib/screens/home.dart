@@ -10,6 +10,7 @@ import '../firebase_support/firebase_firestore.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
 import 'cart_screen/cart_screen.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
-    //appProvider.getUserInfoFirebase();
+    appProvider.getUserInfoFirebase();
     getCategoryList();
     super.initState();
   }
@@ -71,7 +72,7 @@ class _HomeState extends State<Home> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15.0),
-                border: Border.all(color: Colors.red, width: 3.0),
+                border: Border.all(color: Colors.black, width: 3.0),
               ),
               child: TextFormField(
                 controller: search,
@@ -97,18 +98,16 @@ class _HomeState extends State<Home> {
                   .push(widget: const CartScreen(), context: context);
             },
             icon: const Icon(
-              Icons.shopping_cart,
+              Icons.shopping_cart_checkout,
               color: Colors.red,
             ),
             iconSize: 35.0,
           ),
           IconButton(
             alignment: Alignment.center,
-            onPressed: () {
-              // TODO: Xử lý khi nhấn biểu tượng thông báo
-            },
+            onPressed: () {},
             icon: const Icon(
-              Icons.notifications,
+              Icons.notifications_active,
               color: Colors.red,
             ),
             iconSize: 35.0,
@@ -275,6 +274,10 @@ class _HomeState extends State<Home> {
                                   itemBuilder: (ctx, index) {
                                     ProductModel singleProduct =
                                         searchList[index];
+                                    final priceFormat = NumberFormat("#,###");
+                                    final formattedPrice = priceFormat
+                                        .format(singleProduct.price.toInt())
+                                        .replaceAll(',', '.');
                                     return Container(
                                       decoration: BoxDecoration(
                                         color: Colors.grey.withOpacity(0.3),
@@ -308,7 +311,7 @@ class _HomeState extends State<Home> {
                                             height: 12.0,
                                           ),
                                           Text(
-                                            "${singleProduct.price} VNĐ",
+                                            "$formattedPrice VNĐ",
                                             style: const TextStyle(
                                               color: Colors.red,
                                               fontSize: 16.0,
@@ -364,6 +367,11 @@ class _HomeState extends State<Home> {
                                       itemBuilder: (ctx, index) {
                                         ProductModel singleProduct =
                                             productModelList[index];
+                                        final priceFormat =
+                                            NumberFormat("#,###");
+                                        final formattedPrice = priceFormat
+                                            .format(singleProduct.price.toInt())
+                                            .replaceAll(',', '.');
                                         return Container(
                                           decoration: BoxDecoration(
                                             color: Colors.grey.withOpacity(0.3),
@@ -397,7 +405,7 @@ class _HomeState extends State<Home> {
                                                 height: 12.0,
                                               ),
                                               Text(
-                                                "${singleProduct.price} VNĐ",
+                                                "$formattedPrice VNĐ",
                                                 style: const TextStyle(
                                                   color: Colors.red,
                                                   fontSize: 16.0,

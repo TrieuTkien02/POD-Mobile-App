@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pod_market/screens/ui_auth/start.dart';
 import '../../constants/asset_images.dart';
 import '../../constants/routes.dart';
+import '../../widgets/primary_button.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
@@ -14,38 +15,26 @@ class Welcome extends StatelessWidget {
               child: Image.asset(
             AssetsImages.instance.logoDark,
           )),
+          const SizedBox(
+            height: 30.0,
+          ),
           const Text(
             textAlign: TextAlign.center,
-            "\"Mua sắm là một cách để kết nối với chính mình, để tận hưởng khoảnh khắc và tìm thấy niềm vui trong những điều nhỏ bé\"",
+            "\"Mua sắm là một cách để kết nối với chính mình, để tận hưởng khoảnh\nkhắc và tìm thấy niềm vui trong\nnhững điều nhỏ bé\"",
             style: TextStyle(
               color: Colors.black,
-              fontSize: 25,
+              fontSize: 22,
             ),
           ),
           const SizedBox(
             height: 80.0,
           ),
-          SizedBox(
-            height: 80,
-            width: 400,
-            child: ElevatedButton(
-              onPressed: () {
+          PrimaryButton(
+            title: "Tiếp tục",
+            onPressed: () {
                 Routes.instance.push(widget: const Start(), context: context);
-              },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text(
-                "Tiếp tục",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24,
-                ),
-              ),
-            ),
-          )
+            },
+          ),
         ],
       ),
     );
