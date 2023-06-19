@@ -401,12 +401,6 @@ class _MyHomePageState extends State<Sanpham> {
               ),
             ),
 
-
-
-
-
-
-
             Container(
               padding: EdgeInsets.all(16.0),
               child: Row(

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:partnerapp/Pages/TrangCaNhan.dart';
 import 'package:partnerapp/Values/app_assets.dart';
 import '../../constants/routes.dart';
 import 'package:partnerapp/Pages/ThemSanPham.dart';
 import 'package:partnerapp/models/PullProduct.dart';
 import 'package:partnerapp/Pages/Sanpham.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 void main() {
   runApp(MyHomePage());
 }
 
 class MyHomePage extends StatefulWidget {
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -93,6 +98,31 @@ void _showProductDialog(BuildContext context, Product product) {
 
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  String avatarUrl = '';
+  String coverImageUrl = '';
+  String shopName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserProfile();
+  }
+  
+  Future<void> fetchUserProfile() async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('Partner')
+        .doc('username') // Thay 'username' bằng giá trị tương ứng
+        .get();
+
+    if (snapshot.exists) {
+      setState(() {
+        avatarUrl = snapshot.data()?['avatarUrl'] ?? '';
+        coverImageUrl = snapshot.data()?['coverImageUrl'] ?? '';
+        shopName = snapshot.data()?['shopName'] ?? '';
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -111,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 200,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(AppAssets.anhbia),
+                        image: AssetImage(coverImageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -154,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: [
                               CircleAvatar(
                                 backgroundImage:
-                                AssetImage(AppAssets.anhdaidien),
+                                AssetImage(avatarUrl),
                                 radius: 50.0,
                               ),
                               SizedBox(height: 8.0),
@@ -163,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
-                                      'BOYZ - Thời Trang Nam',
+                                      shopName,
                                       style: TextStyle(
                                         fontSize: 22.0,
                                         color: Colors.black,
@@ -389,21 +419,34 @@ class _MyHomePageState extends State<MyHomePage> {
                       SizedBox(
                         height: 13.0,
                       ),
-                      CircleAvatar(
-                        backgroundImage: AssetImage(AppAssets.anhdaidien),
-                        radius: 13.0,
+                      InkWell(
+                        onTap: () {
+                          // Xử lý sự kiện khi nhấp vào ảnh
+                          Routes.instance.push(widget: Trangcanhan(), context: context ); // Gọi hàm để chuyển đến trang cá nhân
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(AppAssets.anhdaidien),
+                          radius: 13.0,
+                        ),
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
-                      Text(
-                        'Trang cá nhân',
-                        style: TextStyle(
-                          color: Colors.black,
+                      InkWell(
+                        onTap: () {
+                          // Xử lý sự kiện khi nhấp vào chữ
+                          Routes.instance.push(widget: Trangcanhan(), context: context ); // Gọi hàm để chuyển đến trang cá nhân
+                        },
+                        child: Text(
+                          'Trang cá nhân',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ],
                   ),
+
                 ],
               ),
             ),

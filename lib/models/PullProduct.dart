@@ -80,51 +80,57 @@ Future<List<Product>> fetchProducts(String username, String Loaisanpham) async {
 }
 
 Future<List<Product>> fetchAllProducts(String username) async {
+  List<Product> products = [];
+
   // Initialize Firebase
   await Firebase.initializeApp();
 
-  // Replace 'partners' with your Firestore collection name
-  // and 'Giày thể thao' with the desired category
-  QuerySnapshot snapshot = await FirebaseFirestore.instance
-      .collection('Partner')
-      .doc(username)
-      .collection('categories')
-      .doc('Giày thể thao')
-      .collection('products')
-      .get();
+  try {
+    QuerySnapshot categoriesSnapshot = await FirebaseFirestore.instance
+        .collection('Partner')
+        .doc(username)
+        .collection('categories')
+        .get();
 
-  List<Product> products = [];
+    for (QueryDocumentSnapshot categoryDoc in categoriesSnapshot.docs) {
+      QuerySnapshot productsSnapshot = await categoryDoc.reference
+          .collection('products')
+          .get();
 
-  for (QueryDocumentSnapshot doc in snapshot.docs) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      for (QueryDocumentSnapshot productDoc in productsSnapshot.docs) {
+        Map<String, dynamic> productData = productDoc.data() as Map<String, dynamic> ;
 
-    // Retrieve the necessary product properties from the data map
-    String name = data['name'];
-    String description = data['description'];
-    double price = data['price'];
-    String category = data['category'];
-    String material = data['material'];
-    String size = data['size'];
-    String productionunit = data['productionunit'];
-    String color = data['color'];
+        // Retrieve the necessary product properties from the data map
+        String name = productData['name'];
+        String description = productData['description'];
+        double price = productData['price'];
+        String category = productData['category'];
+        String material = productData['material'];
+        String size = productData['size'];
+        String productionunit = productData['productionunit'];
+        String color = productData['color'];
 
-    // Retrieve the image URL from the 'image_url' field
-    String imageUrl = data['image_url'];
+        // Retrieve the image URL from the 'image_url' field
+        String imageUrl = productData['image_url'];
 
-    // Create a new Product instance with the retrieved properties and image URL
-    Product product = Product(
-      name: name,
-      description: description,
-      price: price,
-      category: category,
-      imageUrl: imageUrl,
-      material: material,
-      size: size,
-      productionunit: productionunit,
-      color: color,
-    );
+        // Create a new Product instance with the retrieved properties and image URL
+        Product product = Product(
+          name: name,
+          description: description,
+          price: price,
+          category: category,
+          imageUrl: imageUrl,
+          material: material,
+          size: size,
+          productionunit: productionunit,
+          color: color,
+        );
 
-    products.add(product);
+        products.add(product);
+      }
+    }
+  } catch (e) {
+    print('Error fetching products: $e');
   }
 
   return products;

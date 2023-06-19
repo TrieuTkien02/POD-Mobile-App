@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-
+import 'package:partnerapp/Pages/Thietlaptaikhoan.dart';
 import '../Values/app_assets.dart';
-
-class MyWidget extends StatefulWidget {
+import 'package:partnerapp/constants/routes.dart';
+import 'package:partnerapp/Pages/TrangChu.dart';
+class Trangcanhan extends StatefulWidget {
   @override
-  _MyWidgetState createState() => _MyWidgetState();
+  _Trangcanhanstate createState() => _Trangcanhanstate();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _Trangcanhanstate extends State<Trangcanhan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,31 +259,52 @@ class _MyWidgetState extends State<MyWidget> {
                     child: Column(
                       children: <Widget>[
                         Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.person,
-                                  size: 24.0,
-                                ),
-                                Text(
-                                  'Thiết lập tài khoản',
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                          child: InkWell(
+                            onTap: () {
+                              Routes.instance.push(widget: UserProfilePage(), context: context ); // Gọi hàm để chuyển đến trang Thongtincanhan
+                            },
+                            child: Container(
+                              color: Colors.white,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
+                                      Routes.instance.push(widget: UserProfilePage(), context: context ); // Gọi hàm để chuyển đến trang Thongtincanhan
+                                    },
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 24.0,
+                                    ),
                                   ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 16.0,
-                                ),
-                              ],
+                                  GestureDetector(
+                                    onTap: () {
+                                      Routes.instance.push(widget:UserProfilePage(), context: context ); // Gọi hàm để chuyển đến trang Thongtincanhan
+                                    },
+                                    child: Text(
+                                      'Thiết lập tài khoản',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Routes.instance.push(widget: UserProfilePage(), context: context ); // Gọi hàm để chuyển đến trang Thongtincanhan
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
+
 
                         Expanded(
                           child: Container(
@@ -405,21 +427,45 @@ class _MyWidgetState extends State<MyWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Column(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.home),
-                      color: Colors.blue,
-                      onPressed: () {},
-                    ),
-                    Text(
-                      'Trang chủ',
-                      style: TextStyle(
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.home),
                         color: Colors.blue,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyHomePage()),
+                          );
+                        },
                       ),
-                    ),
-                  ],
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyHomePage()),
+                          );
+                        },
+                        child: Text(
+                          'Trang chủ',
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+
+
+
                 Column(
                   children: [
                     IconButton(
@@ -477,6 +523,6 @@ class _MyWidgetState extends State<MyWidget> {
 
 void main() {
   runApp(MaterialApp(
-    home: MyWidget(),
+    home: Trangcanhan(),
   ));
 }

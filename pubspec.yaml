@@ -50,7 +50,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   flutter_material_color_picker: ^1.2.0
   flutter_form_builder: ^8.0.0
-
+  cached_network_image: ^3.0.0
 
 
 

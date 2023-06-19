@@ -1,0 +1,185 @@
+import 'package:flutter/material.dart';
+import 'package:partnerapp/Values/app_assets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class UserProfilePage extends StatefulWidget {
+  @override
+  _UserProfilePageState createState() => _UserProfilePageState();
+}
+
+class _UserProfilePageState extends State<UserProfilePage> {
+  String avatarUrl = '';
+  String coverImageUrl = '';
+  String shopName = '';
+  String newPassword = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserProfile();
+  }
+
+  Future<void> fetchUserProfile() async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('Partner')
+        .doc('username') // Thay 'username' bằng giá trị tương ứng
+        .get();
+
+    if (snapshot.exists) {
+      setState(() {
+        avatarUrl = snapshot.data()?['avatarUrl'] ?? '';
+        coverImageUrl = snapshot.data()?['coverImageUrl'] ?? '';
+        shopName = snapshot.data()?['shopName'] ?? '';
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Chỉnh sửa thông tin'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Chỉnh sửa ảnh đại diện',
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.0),
+              GestureDetector(
+                onTap: () {
+                  chooseAvatarImage();
+                },
+                child: Container(
+                  width: 100.0,
+                  height: 100.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: avatarUrl.isNotEmpty
+                          ? NetworkImage(avatarUrl) as ImageProvider<Object>
+                          : AssetImage(avatarUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 32.0),
+              Text(
+                'Chỉnh sửa ảnh bìa',
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.0),
+              GestureDetector(
+                onTap: () {
+                  chooseCoverImage();
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 200.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: coverImageUrl.isNotEmpty
+                          ? NetworkImage(coverImageUrl) as ImageProvider<Object>
+                          : AssetImage(coverImageUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 32.0),
+              Text(
+                'Chỉnh sửa tên shop',
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    shopName = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Nhập tên shop',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 32.0),
+              Text(
+                'Đổi mật khẩu',
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    newPassword = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Nhập mật khẩu mới',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 32.0),
+              ElevatedButton(
+                onPressed: () {
+                  updateProfile();
+                },
+                child: Text('Cập nhật'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> chooseAvatarImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        avatarUrl = pickedFile.path;
+      });
+    }
+  }
+
+  Future<void> chooseCoverImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        coverImageUrl = pickedFile.path;
+      });
+    }
+  }
+
+  void updateProfile() {
+    if (shopName.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection('Partner')
+          .doc('username') // Thay 'username' bằng giá trị thích hợp
+          .update({
+        'avatarUrl': avatarUrl,
+        'coverImageUrl': coverImageUrl,
+        'shopName': shopName,
+      })
+          .then((value) {
+        print('Cập nhật thông tin thành công');
+      })
+          .catchError((error) {
+        print('Lỗi khi cập nhật thông tin: $error');
+      });
+    }
+  }
+}
