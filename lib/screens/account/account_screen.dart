@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import '../../constants/routes.dart';
 import '../../firebase_support/firebase_auth_helper.dart';
 import '../../provider/app_provider.dart';
-import '../../widgets/primary_button.dart';
+import '../about_us.dart';
+import '../order_screen.dart';
 import 'change_password.dart';
 import 'edit_profile.dart';
 import '../favourite_screen/favourite_screen.dart';
@@ -89,8 +90,8 @@ class _AccountScreenState extends State<AccountScreen> {
               children: [
                 ListTile(
                   onTap: () {
-                    // Routes.instance
-                    //     .push(widget: const OrderScreen(), context: context);
+                    Routes.instance
+                        .push(widget: const OrderScreen(), context: context);
                   },
                   leading: const Icon(Icons.shopping_bag_outlined),
                   title: const Text("Đơn hàng đã đặt"),
@@ -105,8 +106,8 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 ListTile(
                   onTap: () {
-                    // Routes.instance
-                    //     .push(widget: const AboutUs(), context: context);
+                    Routes.instance
+                        .push(widget: const AboutUs(), context: context);
                   },
                   leading: const Icon(Icons.info_outline),
                   title: const Text("Thông tin của chúng tôi"),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/constants.dart';
+import '../../constants/routes.dart';
 import '../../provider/app_provider.dart';
+import '../cart_item_checkout.dart';
 import 'single_cart_item.dart';
 import 'package:intl/intl.dart';
 
@@ -66,8 +68,8 @@ class _CartScreenState extends State<CartScreen> {
                     if (appProvider.getBuyProductList.isEmpty) {
                       showMessage("Giỏ hàng trống");
                     } else {
-                      // Routes.instance.push(
-                      //     widget: const CartItemCheckout(), context: context);
+                      Routes.instance.push(
+                          widget: const CartItemCheckout(), context: context);
                     }
                   },
                   child: const Text(

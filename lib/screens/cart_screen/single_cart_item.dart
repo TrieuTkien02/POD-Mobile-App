@@ -28,7 +28,9 @@ class _SingleCartItemState extends State<SingleCartItem> {
       context,
     );
     final priceFormat = NumberFormat("#,###");
-    final formattedPrice = priceFormat.format(widget.singleProduct.price.toInt()).replaceAll(',', '.');
+    final formattedPrice = priceFormat
+        .format(appProvider.price1Product(widget.singleProduct).toInt())
+        .replaceAll(',', '.');
     return Container(
       margin: const EdgeInsets.only(bottom: 12.0),
       decoration: BoxDecoration(
@@ -66,15 +68,17 @@ class _SingleCartItemState extends State<SingleCartItem> {
                           children: [
                             FittedBox(
                               child: Text(
-                                widget.singleProduct.name,
+                                widget.singleProduct.name.length > 15
+                                    ? '${widget.singleProduct.description.substring(0, 15)}...'
+                                    : widget.singleProduct.name,
                                 style: const TextStyle(
-                                  fontSize: 12.0,
+                                  fontSize: 15.0,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                             const SizedBox(
-                              height: 20.0,
+                              height: 15.0,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -122,68 +126,49 @@ class _SingleCartItemState extends State<SingleCartItem> {
                                     child: Icon(Icons.add),
                                   ),
                                 ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 6.0,
+                            ),
+                            Row(
+                              children: [
                                 const SizedBox(
-                                  width: 60,
+                                  width: 10.0,
                                 ),
-                                CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () {
-                          appProvider.removeCartProduct(widget.singleProduct);
-                          showMessage("Xóa khỏi giỏ hàng");
-                        },
-                        child: const CircleAvatar(
-                          maxRadius: 13,
-                          child: Icon(
-                            Icons.delete,
-                            size: 17,
-                          ),
-                        )),
+                                Text(
+                                  "$formattedPrice VNĐ",
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ],
                             ),
                           ],
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            if (!appProvider.getFavouriteProductList
-                                .contains(widget.singleProduct)) {
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
                               appProvider
-                                  .addFavouriteProduct(widget.singleProduct);
-                              showMessage("Yêu thích");
-                            } else {
-                              appProvider
-                                  .removeFavouriteProduct(widget.singleProduct);
-                              showMessage("Bỏ yêu thích");
-                            }
-                          },
-                          child: Text(
-                            appProvider.getFavouriteProductList
-                                    .contains(widget.singleProduct)
-                                ? "Bỏ yêu thích"
-                                : "Yêu thích",
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 30.0,
-                        ),
-                        Text(
-                          "$formattedPrice VNĐ",
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                                  .removeCartProduct(widget.singleProduct);
+                              showMessage("Xóa khỏi giỏ hàng");
+                            },
+                            child: const CircleAvatar(
+                              maxRadius: 13,
+                              child: Icon(
+                                Icons.delete,
+                                size: 17,
+                              ),
+                            )),
+                      ),
                     ),
-                    
                   ],
                 ),
               ),

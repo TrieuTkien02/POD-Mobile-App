@@ -9,22 +9,17 @@ import '../models/product_model.dart';
 import '../models/user_model.dart';
 
 class AppProvider with ChangeNotifier {
-  // Cart Work
   final List<ProductModel> _cartProductList = [];
+  List<ProductModel> get getCartProductList => _cartProductList;
+
   final List<ProductModel> _buyProductList = [];
+  List<ProductModel> get getBuyProductList => _buyProductList;
+
+  final List<ProductModel> _favouriteProductList = [];
+  List<ProductModel> get getFavouriteProductList => _favouriteProductList;
 
   UserModel? _userModel;
-
   UserModel get getUserInformation => _userModel!;
-
-  bool isProductExist(ProductModel product, List<ProductModel> productList) {
-    for (var p in productList) {
-      if (p.name == product.name) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   int findProductIndexById(
       ProductModel productId, List<ProductModel> productList) {
@@ -36,6 +31,7 @@ class AppProvider with ChangeNotifier {
     return -1;
   }
 
+  //Cart
   void addCartProduct(ProductModel productModel) {
     int existingProductIndex =
         findProductIndexById(productModel, _cartProductList);
@@ -53,24 +49,35 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<ProductModel> get getCartProductList => _cartProductList;
-
   //Favourite
-  final List<ProductModel> _favouriteProductList = [];
+  bool isFavourite(ProductModel product, List<ProductModel> listFavourite) {
+    for (int i = 0; i < listFavourite.length; i++) {
+      if (listFavourite[i].name == product.name) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   void addFavouriteProduct(ProductModel productModel) {
-    _favouriteProductList.add(productModel);
-    notifyListeners();
+    int existingProductIndex =
+        findProductIndexById(productModel, _favouriteProductList);
+    if (existingProductIndex == -1) {
+      _favouriteProductList.add(productModel);
+      showMessage("Yêu thích");
+      notifyListeners();
+    }
   }
 
   void removeFavouriteProduct(ProductModel productModel) {
-    _favouriteProductList.remove(productModel);
-    notifyListeners();
+    if (isFavourite(productModel, _favouriteProductList) == true) {
+      _favouriteProductList.remove(productModel);
+      showMessage("Bỏ yêu thích");
+      notifyListeners();
+    }
   }
 
-  List<ProductModel> get getFavouriteProductList => _favouriteProductList;
-
-  // USer Information
+  //User Information
   void getUserInfoFirebase() async {
     _userModel = await FirebaseFirestoreHelper.instance.getUserInformation();
     notifyListeners();
@@ -105,8 +112,8 @@ class AppProvider with ChangeNotifier {
 
     notifyListeners();
   }
-  // TOTAL PRICE
 
+  //Total Price
   double totalPrice() {
     double totalPrice = 0.0;
     for (var element in _cartProductList) {
@@ -115,11 +122,9 @@ class AppProvider with ChangeNotifier {
     return totalPrice;
   }
 
-  double totalPriceBuyProductList() {
+  double price1Product(ProductModel product) {
     double totalPrice = 0.0;
-    for (var element in _buyProductList) {
-      totalPrice += element.price * element.qty!;
-    }
+    totalPrice = product.price * product.qty!;
     return totalPrice;
   }
 
@@ -129,7 +134,7 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // BUY Product
+  //Buy Product
   void addBuyProduct(ProductModel model) {
     _buyProductList.add(model);
     notifyListeners();
@@ -149,6 +154,4 @@ class AppProvider with ChangeNotifier {
     _buyProductList.clear();
     notifyListeners();
   }
-
-  List<ProductModel> get getBuyProductList => _buyProductList;
 }

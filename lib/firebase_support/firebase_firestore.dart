@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pod_market/models/sale_model.dart';
 import '../constants/constants.dart';
 import '../models/category_model.dart';
+import '../models/order_model.dart';
 import '../models/product_model.dart';
 import '../models/user_model.dart';
 
@@ -131,25 +132,25 @@ class FirebaseFirestoreHelper {
     }
   }
 
-  // Future<List<OrderModel>> getUserOrder() async {
-  //   try {
-  //     QuerySnapshot<Map<String, dynamic>> querySnapshot =
-  //         await _firebaseFirestore
-  //             .collection("usersOrders")
-  //             .doc(FirebaseAuth.instance.currentUser!.uid)
-  //             .collection("orders")
-  //             .get();
+  Future<List<OrderModel>> getUserOrder() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _firebaseFirestore
+              .collection("usersOrders")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .collection("orders")
+              .get();
 
-  //     List<OrderModel> orderList = querySnapshot.docs
-  //         .map((element) => OrderModel.fromJson(element.data()))
-  //         .toList();
+      List<OrderModel> orderList = querySnapshot.docs
+          .map((element) => OrderModel.fromJson(element.data()))
+          .toList();
 
-  //     return orderList;
-  //   } catch (e) {
-  //     showMessage(e.toString());
-  //     return [];
-  //   }
-  // }
+      return orderList;
+    } catch (e) {
+      showMessage(e.toString());
+      return [];
+    }
+  }
 
   void updateTokenFromFirebase() async {
     String? token = await FirebaseMessaging.instance.getToken();

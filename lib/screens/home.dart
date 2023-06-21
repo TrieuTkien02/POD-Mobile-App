@@ -157,10 +157,7 @@ class _HomeState extends State<Home> {
                                     child: CupertinoButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
-                                        // Routes.instance.push(
-                                        //     widget:
-                                        //         CategoryView(categoryModel: e),
-                                        //     context: context);
+                                        
                                       },
                                       child: Card(
                                         shape: const RoundedRectangleBorder(

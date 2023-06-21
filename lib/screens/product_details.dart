@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pod_market/provider/app_provider.dart';
 import 'package:provider/provider.dart';
-import '../constants/constants.dart';
 import '../constants/routes.dart';
 import '../models/product_model.dart';
 import 'cart_screen/cart_screen.dart';
+import 'check_out.dart';
 
 class ProductDetails extends StatefulWidget {
   final ProductModel singleProduct;
@@ -42,9 +42,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
           IconButton(
             alignment: Alignment.center,
-            onPressed: () {
-
-            },
+            onPressed: () {},
             icon: const Icon(
               Icons.notifications_active,
               color: Colors.red,
@@ -126,11 +124,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ),
                   IconButton(
                     onPressed: () {
-                      setState(() {
-                        widget.singleProduct.isFavourite =
-                            !widget.singleProduct.isFavourite;
-                      });
-                      if (widget.singleProduct.isFavourite) {
+                      if (appProvider.isFavourite(widget.singleProduct,
+                              appProvider.getFavouriteProductList) ==
+                          false) {
                         appProvider.addFavouriteProduct(widget.singleProduct);
                       } else {
                         appProvider
@@ -139,19 +135,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                     },
                     icon: Container(
                       child: Padding(
-                        padding: const EdgeInsets.all(0.0), 
-                        child: Opacity(
-                          opacity: widget.singleProduct.isFavourite
-                              ? 1.0
-                              : 0.8, 
-                          child: Icon(
-                            appProvider.getFavouriteProductList
-                                    .contains(widget.singleProduct)
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            size: 40,
-                            color: Colors.red, 
-                          ),
+                        padding: const EdgeInsets.all(0.0),
+                        child: Icon(
+                          appProvider.isFavourite(widget.singleProduct,
+                                  appProvider.getFavouriteProductList)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          size: 40,
+                          color: Colors.red,
                         ),
                       ),
                     ),
@@ -184,11 +175,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                             MaterialStateProperty.all<Color>(Colors.red),
                       ),
                       onPressed: () {
-                        // ProductModel productModel =
-                        //     widget.singleProduct.copyWith(qty: qty);
-                        // Routes.instance.push(
-                        //     widget: Checkout(singleProduct: productModel),
-                        //     context: context);
+                        ProductModel productModel =
+                            widget.singleProduct.copyWith(qty: qty);
+                        Routes.instance.push(
+                            widget: Checkout(singleProduct: productModel),
+                            context: context);
                       },
                       child: const Text("Mua"),
                     ),
@@ -213,7 +204,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                 height: 10.00,
               ),
               Container(
-                //padding: EdgeInsets.all(16),
                 child: Text(
                   isExpanded
                       ? widget.singleProduct.description

@@ -4,6 +4,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'account/account_screen.dart';
 import 'favourite_screen/favourite_screen.dart';
 import 'home.dart';
+import 'order_screen.dart';
 class CustomBottomBar extends StatefulWidget {
   const CustomBottomBar({
     final Key? key,
@@ -20,11 +21,8 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
   List<Widget> _buildScreens() => [
         const Home(),
         const FavouriteScreen(),
-        const Home(),
+        const OrderScreen(),
         const AccountScreen(),
-        // const CartScreen(),
-        // const OrderScreen(),
-        // const AccountScreen(),
       ];
 
   List<PersistentBottomNavBarItem> _navBarsItems() => [
