@@ -64,6 +64,7 @@ Future<void> addProductToFirestore(Product product) async {
         'size': product.size,
         'productionunit': product.productionunit,
         'color': product.color,
+        'partner':'username',
       });
 
       print('Thêm sản phẩm vào collection của category thành công!');
