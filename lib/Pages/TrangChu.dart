@@ -7,6 +7,7 @@ import 'package:partnerapp/models/PullProduct.dart';
 import 'package:partnerapp/Pages/Sanpham.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 void main() {
   runApp(MyHomePage());
@@ -108,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     fetchUserProfile();
   }
-  
+
   Future<void> fetchUserProfile() async {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
         .collection('Partner')
@@ -123,6 +124,9 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -141,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 200,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(coverImageUrl),
+                        image: NetworkImage(coverImageUrl), // Chỉnh sửa thành NetworkImage để tải ảnh từ URL
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -183,8 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               CircleAvatar(
-                                backgroundImage:
-                                AssetImage(avatarUrl),
+                                backgroundImage: NetworkImage(avatarUrl), // Chỉnh sửa thành NetworkImage để tải ảnh từ URL
                                 radius: 50.0,
                               ),
                               SizedBox(height: 8.0),
@@ -234,6 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

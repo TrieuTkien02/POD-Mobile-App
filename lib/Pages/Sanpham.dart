@@ -12,7 +12,6 @@ void main() {
 }
 
 class Sanpham extends StatefulWidget {
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -98,6 +97,32 @@ void _showProductDialog(BuildContext context, Product product) {
 
 
 class _MyHomePageState extends State<Sanpham> {
+
+  String avatarUrl = '';
+  String coverImageUrl = '';
+  String shopName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserProfile();
+  }
+
+  Future<void> fetchUserProfile() async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('Partner')
+        .doc('username') // Thay 'username' bằng giá trị tương ứng
+        .get();
+
+    if (snapshot.exists) {
+      setState(() {
+        avatarUrl = snapshot.data()?['avatarUrl'] ?? '';
+        coverImageUrl = snapshot.data()?['coverImageUrl'] ?? '';
+        shopName = snapshot.data()?['shopName'] ?? '';
+      });
+    }
+  }
+
   String LoaiSanPham="";
   @override
   Widget build(BuildContext context) {
@@ -117,7 +142,7 @@ class _MyHomePageState extends State<Sanpham> {
                     height: 200,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(AppAssets.anhbia),
+                        image: NetworkImage(coverImageUrl), // Chỉnh sửa thành NetworkImage để tải ảnh từ URL
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -159,8 +184,7 @@ class _MyHomePageState extends State<Sanpham> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               CircleAvatar(
-                                backgroundImage:
-                                AssetImage(AppAssets.anhdaidien),
+                                backgroundImage: NetworkImage(avatarUrl), // Chỉnh sửa thành NetworkImage để tải ảnh từ URL
                                 radius: 50.0,
                               ),
                               SizedBox(height: 8.0),
@@ -169,7 +193,7 @@ class _MyHomePageState extends State<Sanpham> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 10.0),
                                     child: Text(
-                                      'BOYZ - Thời Trang Nam',
+                                      shopName,
                                       style: TextStyle(
                                         fontSize: 22.0,
                                         color: Colors.black,
@@ -210,6 +234,7 @@ class _MyHomePageState extends State<Sanpham> {
                 ],
               ),
             ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

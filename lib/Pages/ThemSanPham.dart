@@ -20,6 +20,32 @@ class ThemSanPham extends StatefulWidget {
 }
 
 class _ThemSanPhamState extends State<ThemSanPham> {
+  String avatarUrl = '';
+  String coverImageUrl = '';
+  String shopName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserProfile();
+    _selectedImage = null; // Khởi tạo _selectedImage với giá trị null
+  }
+
+  Future<void> fetchUserProfile() async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('Partner')
+        .doc('username') // Thay 'username' bằng giá trị tương ứng
+        .get();
+
+    if (snapshot.exists) {
+      setState(() {
+        avatarUrl = snapshot.data()?['avatarUrl'] ?? '';
+        coverImageUrl = snapshot.data()?['coverImageUrl'] ?? '';
+        shopName = snapshot.data()?['shopName'] ?? '';
+      });
+    }
+  }
+
   late File? _selectedImage;
   String selectedProduct = 'Chọn loại sản phẩm';
   String selectedMaterial = 'Chọn chất liệu';
@@ -29,11 +55,7 @@ class _ThemSanPhamState extends State<ThemSanPham> {
   String selectedUnit ="";
   String description = '';
   String nameProduct = '';
-  @override
-  void initState() {
-    super.initState();
-    _selectedImage = null; // Khởi tạo _selectedImage với giá trị null
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,23 +68,19 @@ class _ThemSanPhamState extends State<ThemSanPham> {
       body: Column(
         children: [
           Container(
-
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-
                   height: 200,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(AppAssets.anhbia),
+                      image: NetworkImage(coverImageUrl), // Chỉnh sửa thành NetworkImage để tải ảnh từ URL
                       fit: BoxFit.cover,
                     ),
                   ),
-                  child:
-                  Column(
-
-                    children : [
+                  child: Column(
+                    children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -85,23 +103,21 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                                 decoration: InputDecoration(
                                   hintText: 'Tìm kiếm',
                                   border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                                  contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 16.0),
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-
-
                       Padding(
                         padding: EdgeInsets.only(left: 16.0, top: 45.0),
-
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             CircleAvatar(
-                              backgroundImage: AssetImage(AppAssets.anhdaidien),
+                              backgroundImage: NetworkImage(avatarUrl), // Chỉnh sửa thành NetworkImage để tải ảnh từ URL
                               radius: 50.0,
                             ),
                             SizedBox(height: 8.0),
@@ -109,8 +125,8 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(left: 10.0),
-                                  child:Text(
-                                    'BOYZ - Thời Trang Nam',
+                                  child: Text(
+                                    shopName,
                                     style: TextStyle(
                                       fontSize: 22.0,
                                       color: Colors.black,
@@ -124,35 +140,34 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                                       style: TextStyle(
                                         fontSize: 15.0,
                                         color: Colors.black,
-
                                       ),
                                     ),
-                                    Icon(Icons.star, color: Colors.yellow,),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.yellow,
+                                    ),
                                     SizedBox(width: 20.0),
                                     Text(
                                       '100 người theo dõi',
                                       style: TextStyle(
                                         fontSize: 15.0,
                                         color: Colors.black,
-
                                       ),
                                     ),
                                   ],
                                 ),
                               ],
                             )
-
                           ],
                         ),
                       ),
-
                     ],
                   ),
-
                 ),
               ],
             ),
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

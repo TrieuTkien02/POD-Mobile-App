@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:partnerapp/Values/app_assets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' show FirebaseStorage, UploadTask;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:partnerapp/Values/app_assets.dart';
+import 'package:path/path.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -63,9 +67,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: avatarUrl.isNotEmpty
-                          ? NetworkImage(avatarUrl) as ImageProvider<Object>
-                          : AssetImage(avatarUrl),
+                      image: _getAvatarImageProvider(),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -86,9 +88,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   height: 200.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: coverImageUrl.isNotEmpty
-                          ? NetworkImage(coverImageUrl) as ImageProvider<Object>
-                          : AssetImage(coverImageUrl),
+                      image: _getCoverImageProvider(),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -175,11 +175,55 @@ class _UserProfilePageState extends State<UserProfilePage> {
         'shopName': shopName,
       })
           .then((value) {
+        if (avatarUrl.isNotEmpty) {
+          uploadImageToFirestore('avatarUrl', avatarUrl);
+        }
+        if (coverImageUrl.isNotEmpty) {
+          uploadImageToFirestore('coverImageUrl', coverImageUrl);
+        }
         print('Cập nhật thông tin thành công');
       })
           .catchError((error) {
         print('Lỗi khi cập nhật thông tin: $error');
       });
+    }
+  }
+
+  Future<void> uploadImageToFirestore(String fieldName, String filePath) async {
+    File file = File(filePath);
+
+    try {
+      final String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+      final Reference storageRef = FirebaseStorage.instance.ref().child('images/$fieldName/$imageName.jpg');
+      final UploadTask uploadTask = storageRef.putFile(file);
+      final TaskSnapshot storageSnapshot = await uploadTask.whenComplete(() {});
+      final String imageUrl = await storageSnapshot.ref.getDownloadURL();
+
+      // Cập nhật đường dẫn ảnh trong Firestore
+      await FirebaseFirestore.instance
+          .collection('Partner')
+          .doc('username') // Thay 'username' bằng giá trị thích hợp
+          .update({fieldName: imageUrl});
+
+      print('Cập nhật thông tin thành công');
+    } catch (error) {
+      print('Lỗi khi cập nhật thông tin: $error');
+    }
+  }
+
+  ImageProvider<Object> _getAvatarImageProvider() {
+    if (avatarUrl.isNotEmpty) {
+      return FileImage(File(avatarUrl));
+    } else {
+      return AssetImage(AppAssets.anhdaidien);
+    }
+  }
+
+  ImageProvider<Object> _getCoverImageProvider() {
+    if (coverImageUrl.isNotEmpty) {
+      return FileImage(File(coverImageUrl));
+    } else {
+      return AssetImage(AppAssets.anhbia);
     }
   }
 }
