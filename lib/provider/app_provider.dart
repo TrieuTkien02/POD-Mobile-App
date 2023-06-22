@@ -122,6 +122,14 @@ class AppProvider with ChangeNotifier {
     return totalPrice;
   }
 
+  double totalPriceBuyProductList() {
+    double totalPrice = 0.0;
+    for (var element in _buyProductList) {
+      totalPrice += element.price * element.qty!;
+    }
+    return totalPrice;
+  }
+
   double price1Product(ProductModel product) {
     double totalPrice = 0.0;
     totalPrice = product.price * product.qty!;

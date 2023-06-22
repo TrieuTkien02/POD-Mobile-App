@@ -130,7 +130,7 @@ class _CartItemCheckoutState extends State<CartItemCheckout> {
                   }
                 } else {
                   int value = double.parse(
-                          appProvider.totalPrice().toString())
+                          appProvider.totalPriceBuyProductList().toString())
                       .round()
                       .toInt();
                   String totalPrice = (value * 100).toString();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:pod_market/provider/app_provider.dart';
 import 'package:pod_market/screens/custom_bottom_bar.dart';
 import 'package:pod_market/screens/ui_auth/welcome.dart';
@@ -10,10 +11,10 @@ import 'firebase_support/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseConfig.platformOptions
-  );
-  
+  Stripe.publishableKey =
+      "pk_test_51MWx8OAVMyklfe3CsjEzA1CiiY0XBTlHYbZ8jQlGtVFIwQi4aNeGv8J1HUw4rgSavMTLzTwgn0XRlwoTVRFXyu2h00mRUeWmAf";
+  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
+
   runApp(const MyApp());
 }
 

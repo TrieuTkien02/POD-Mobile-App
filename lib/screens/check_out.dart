@@ -132,7 +132,8 @@ class _CheckoutState extends State<Checkout> {
                     });
                   }
                 } else {
-                  int value = double.parse(appProvider.totalPrice().toString())
+                  int value = double.parse(
+                          appProvider.totalPriceBuyProductList().toString())
                       .round()
                       .toInt();
                   String totalPrice = (value * 100).toString();
