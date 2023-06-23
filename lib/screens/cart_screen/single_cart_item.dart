@@ -55,7 +55,7 @@ class _SingleCartItemState extends State<SingleCartItem> {
             child: SizedBox(
               height: 140,
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
@@ -78,7 +78,38 @@ class _SingleCartItemState extends State<SingleCartItem> {
                               ),
                             ),
                             const SizedBox(
-                              height: 15.0,
+                              height: 5.0,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "   Size: ${widget.singleProduct.size}",
+                                  style: const TextStyle(
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 50.0,
+                                ),
+                                const Text(
+                                  "  Màu:",
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(16 / 4),
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: Color(int.parse(
+                                        widget.singleProduct.color,
+                                        radix: 16)),
+                                  ),
+                                ),
+                              ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -127,9 +158,6 @@ class _SingleCartItemState extends State<SingleCartItem> {
                                   ),
                                 ),
                               ],
-                            ),
-                            const SizedBox(
-                              height: 6.0,
                             ),
                             Row(
                               children: [

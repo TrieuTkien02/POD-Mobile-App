@@ -2,12 +2,14 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:pod_market/provider/app_provider.dart';
 import 'package:provider/provider.dart';
-import '../constants/routes.dart';
-import '../models/product_model.dart';
-import 'cart_screen/cart_screen.dart';
-import 'check_out.dart';
+import '../../constants/routes.dart';
+import '../../models/product_model.dart';
+import '../cart_screen/cart_screen.dart';
+import 'bottom_sheet.dart';
 
 class ProductDetails extends StatefulWidget {
   final ProductModel singleProduct;
@@ -26,6 +28,10 @@ class _ProductDetailsState extends State<ProductDetails> {
     AppProvider appProvider = Provider.of<AppProvider>(
       context,
     );
+    final priceFormat = NumberFormat("#,###");
+    final formattedPrice = priceFormat
+        .format(widget.singleProduct.price.toInt())
+        .replaceAll(',', '.');
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -75,52 +81,38 @@ class _ProductDetailsState extends State<ProductDetails> {
                   const SizedBox(
                     height: 60.00,
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 30.00,
-              ),
-              Row(
-                children: [
-                  CupertinoButton(
-                    onPressed: () {
-                      if (qty >= 1) {
-                        setState(() {
-                          qty--;
-                        });
-                      }
-                    },
-                    padding: EdgeInsets.zero,
-                    child: const CircleAvatar(
-                      child: Icon(Icons.remove),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 12.0,
-                  ),
                   Text(
-                    qty.toString(),
+                    "$formattedPrice VNĐ",
                     style: const TextStyle(
-                      fontSize: 22,
+                      color: Colors.red,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(
-                    width: 12.0,
-                  ),
-                  CupertinoButton(
-                    onPressed: () {
-                      setState(() {
-                        qty++;
-                      });
-                    },
-                    padding: EdgeInsets.zero,
-                    child: const CircleAvatar(
-                      child: Icon(Icons.add),
+                ],
+              ),
+              const SizedBox(
+                height: 10.00,
+              ),
+              Row(
+                children: [
+                  RatingBar.builder(
+                    unratedColor: const Color.fromARGB(255, 223, 221, 221),
+                    itemSize: 28,
+                    initialRating: 3.5,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4),
+                    onRatingUpdate: (rating) {},
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
                     ),
                   ),
                   const SizedBox(
-                    width: 200,
+                    width: 150,
                   ),
                   IconButton(
                     onPressed: () {
@@ -150,7 +142,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ],
               ),
               const SizedBox(
-                height: 30.00,
+                height: 20.00,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -159,7 +151,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                     onPressed: () {
                       ProductModel productModel =
                           widget.singleProduct.copyWith(qty: qty);
-                      appProvider.addCartProduct(productModel);
+                      // appProvider.addCartProduct(productModel);
+                      showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (context) {
+                              return CustomBottomSheet(
+                                  singleProduct: productModel);
+                            });
                     },
                     child: const Text("Thêm vào giỏ hàng"),
                   ),
@@ -177,9 +176,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                       onPressed: () {
                         ProductModel productModel =
                             widget.singleProduct.copyWith(qty: qty);
-                        Routes.instance.push(
-                            widget: Checkout(singleProduct: productModel),
-                            context: context);
+                        // Routes.instance.push(
+                        //     widget:
+                        //         CustomBottomSheet(singleProduct: productModel),
+                        //     context: context);
+                        showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (context) {
+                              return CustomBottomSheet(
+                                  singleProduct: productModel);
+                            });
                       },
                       child: const Text("Mua"),
                     ),

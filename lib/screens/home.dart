@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pod_market/models/sale_model.dart';
 import 'package:pod_market/provider/app_provider.dart';
 import 'package:pod_market/screens/category_view.dart';
-import 'package:pod_market/screens/product_details.dart';
+import 'package:pod_market/screens/product_details/product_details.dart';
 import 'package:provider/provider.dart';
 import '../constants/routes.dart';
 import '../firebase_support/firebase_firestore.dart';
@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
     setState(() {
       isLoading = true;
     });
-    FirebaseFirestoreHelper.instance.updateTokenFromFirebase();
+    //FirebaseFirestoreHelper.instance.updateTokenFromFirebase();
     categoriesList = await FirebaseFirestoreHelper.instance.getCategories();
     productModelList = await FirebaseFirestoreHelper.instance.getBestProducts();
     saleModellList = await FirebaseFirestoreHelper.instance.getSale();

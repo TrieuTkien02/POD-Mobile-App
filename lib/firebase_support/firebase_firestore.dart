@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:pod_market/models/sale_model.dart';
 import '../constants/constants.dart';
@@ -19,9 +18,8 @@ class FirebaseFirestoreHelper {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await _firebaseFirestore.collection("sale").get();
 
-      List<SaleModel> saleList = querySnapshot.docs
-          .map((e) => SaleModel.fromJson(e.data()))
-          .toList();
+      List<SaleModel> saleList =
+          querySnapshot.docs.map((e) => SaleModel.fromJson(e.data())).toList();
 
       return saleList;
     } catch (e) {
@@ -49,11 +47,18 @@ class FirebaseFirestoreHelper {
   Future<List<ProductModel>> getBestProducts() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _firebaseFirestore.collectionGroup("products").get();
+          await _firebaseFirestore.collection("categories").get();
 
-      List<ProductModel> productModelList = querySnapshot.docs
-          .map((e) => ProductModel.fromJson(e.data()))
-          .toList();
+      List<ProductModel> productModelList = [];
+
+      for (var categoryDoc in querySnapshot.docs) {
+        QuerySnapshot<Map<String, dynamic>> productsSnapshot =
+            await categoryDoc.reference.collection("products").get();
+
+        productModelList.addAll(productsSnapshot.docs
+            .map((doc) => ProductModel.fromJson(doc.data()))
+            .toList());
+      }
 
       return productModelList;
     } catch (e) {
@@ -91,7 +96,6 @@ class FirebaseFirestoreHelper {
 
     return UserModel.fromJson(querySnapshot.data()!);
   }
-
 
   Future<bool> uploadOrderedProductFirebase(
       List<ProductModel> list, BuildContext context, String payment) async {
@@ -147,20 +151,20 @@ class FirebaseFirestoreHelper {
 
       return orderList;
     } catch (e) {
-      showMessage(e.toString());
+      //showMessage(e.toString());
       return [];
     }
   }
 
-  void updateTokenFromFirebase() async {
-    String? token = await FirebaseMessaging.instance.getToken();
-    if (token != null) {
-      await _firebaseFirestore
-          .collection("users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({
-        "notificationToken": token,
-      });
-    }
-  }
+  // void updateTokenFromFirebase() async {
+  //   String? token = await FirebaseMessaging.instance.getToken();
+  //   if (token != null) {
+  //     await _firebaseFirestore
+  //         .collection("users")
+  //         .doc(FirebaseAuth.instance.currentUser!.uid)
+  //         .update({
+  //       "notificationToken": token,
+  //     });
+  //   }
+  // }
 }

@@ -48,6 +48,7 @@ dependencies:
   intl: ^0.18.1
   flutter_stripe: ^9.2.2
   http: ^0.13.6
+  flutter_rating_bar: ^4.0.1
 
 
 

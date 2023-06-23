@@ -6,7 +6,7 @@ import '../../constants/constants.dart';
 import '../../constants/routes.dart';
 import '../../models/product_model.dart';
 import '../../provider/app_provider.dart';
-import '../product_details.dart';
+import '../product_details/product_details.dart';
 
 class SingleFavouriteItem extends StatefulWidget {
   final ProductModel singleProduct;

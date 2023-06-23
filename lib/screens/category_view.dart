@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pod_market/screens/product_details.dart';
+import 'package:intl/intl.dart';
+import 'package:pod_market/screens/product_details/product_details.dart';
 import '../constants/routes.dart';
 import '../firebase_support/firebase_firestore.dart';
 import '../models/category_model.dart';
@@ -87,6 +88,10 @@ class _CategoryViewState extends State<CategoryView> {
                               itemBuilder: (ctx, index) {
                                 ProductModel singleProduct =
                                     productModelList[index];
+                                final priceFormat = NumberFormat("#,###");
+                                final formattedPrice = priceFormat
+                                    .format(singleProduct.price.toInt())
+                                    .replaceAll(',', '.');
                                 return Container(
                                   decoration: BoxDecoration(
                                     color: Theme.of(context)
@@ -121,7 +126,7 @@ class _CategoryViewState extends State<CategoryView> {
                                         height: 12.0,
                                       ),
                                       Text(
-                                        "${singleProduct.price.toInt().toStringAsFixed(0)} VNĐ",
+                                        "$formattedPrice VNĐ",
                                         style: const TextStyle(
                                           color: Colors.red,
                                           fontSize: 16.0,

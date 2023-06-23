@@ -65,7 +65,7 @@ class _EditProfileState extends State<EditProfile> {
           const SizedBox(
             height: 12.0,
           ),
-          TextFormField(
+          TextFormField(        
             controller: textEditingController,
             decoration: InputDecoration(
               hintText: appProvider.getUserInformation.name,

@@ -6,19 +6,20 @@ ProductModel productModelFromJson(String str) =>
 String productModelToJson(ProductModel data) => json.encode(data.toJson());
 
 class ProductModel {
-  ProductModel(
-      {required this.imageUrl,
-      required this.category,
-      required this.name,
-      required this.price,
-      required this.description,
-      required this.isFavourite,
-      required this.material,
-      required this.size,
-      required this.productionunit,
-      required this.color,
-      this.qty,
-      });
+  ProductModel({
+    required this.imageUrl,
+    required this.category,
+    required this.name,
+    required this.price,
+    required this.description,
+    required this.isFavourite,
+    required this.material,
+    required this.size,
+    required this.productionunit,
+    required this.partner,
+    required this.color,
+    this.qty,
+  });
 
   String imageUrl;
   String category;
@@ -30,6 +31,7 @@ class ProductModel {
   String size;
   String productionunit;
   String color;
+  String partner;
   int? qty;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -43,6 +45,7 @@ class ProductModel {
         material: json["material"],
         size: json["size"],
         productionunit: json["productionunit"],
+        partner: json["partner"],
         color: json["color"],
       );
 
@@ -57,6 +60,7 @@ class ProductModel {
         "material": material,
         "size": size,
         "productionunit": productionunit,
+        "partner": partner,
         "color": color,
       };
   ProductModel copyWith({
@@ -73,6 +77,7 @@ class ProductModel {
         material: material,
         size: size,
         productionunit: productionunit,
+        partner: partner,
         color: color,
       );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../firebase_support/firebase_firestore.dart';
 import '../models/order_model.dart';
 
@@ -46,6 +47,10 @@ class OrderScreen extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               itemBuilder: (context, index) {
                 OrderModel orderModel = snapshot.data![index];
+                final priceFormat = NumberFormat("#,###");
+                final formattedPrice = priceFormat
+                    .format(orderModel.totalPrice.toInt())
+                    .replaceAll(',', '.');
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: ExpansionTile(
@@ -77,8 +82,8 @@ class OrderScreen extends StatelessWidget {
                               Text(
                                 orderModel.products[0].name,
                                 style: const TextStyle(
-                                  fontSize: 10.0,
-                                ),
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
                                 height: 12.0,
@@ -90,7 +95,7 @@ class OrderScreen extends StatelessWidget {
                                         Text(
                                           "Số lượng: ${orderModel.products[0].qty.toString()}",
                                           style: const TextStyle(
-                                            fontSize: 12.0,
+                                            fontSize: 13.0,
                                           ),
                                         ),
                                         const SizedBox(
@@ -99,9 +104,9 @@ class OrderScreen extends StatelessWidget {
                                       ],
                                     ),
                               Text(
-                                "Tổng giá: \$${orderModel.totalPrice.toString()}",
+                                "Tổng giá: $formattedPrice VNĐ",
                                 style: const TextStyle(
-                                  fontSize: 10.0,
+                                  fontSize: 13.0,
                                 ),
                               ),
                               const SizedBox(
@@ -110,7 +115,7 @@ class OrderScreen extends StatelessWidget {
                               Text(
                                 "Tình trạng đơn hàng: ${orderModel.status}",
                                 style: const TextStyle(
-                                  fontSize: 10.0,
+                                  fontSize: 13.0,
                                 ),
                               ),
                             ],
@@ -152,8 +157,9 @@ class OrderScreen extends StatelessWidget {
                                               Text(
                                                 singleProduct.name,
                                                 style: const TextStyle(
-                                                  fontSize: 10.0,
-                                                ),
+                                                    fontSize: 10.0,
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
                                               const SizedBox(
                                                 height: 12.0,
