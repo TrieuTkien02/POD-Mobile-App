@@ -8,7 +8,7 @@ import 'package:partnerapp/Pages/Sanpham.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
+import 'package:partnerapp/Pages/DonHang.dart';
 void main() {
   runApp(MyHomePage());
 }
@@ -388,6 +388,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
+
+
+
                   Column(
                     children: [
                       IconButton(
@@ -403,21 +406,43 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
+
+
                   Column(
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.shopping_bag),
-                        color: Colors.black,
-                        onPressed: () {},
-                      ),
-                      Text(
-                        'Đơn hàng',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
+
+                            IconButton(
+                              icon: Icon(Icons.shopping_bag),
+                              color: Colors.black,
+                              onPressed: (
+
+                                  ) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Donhang()),
+                                );
+                              },
+                            ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Donhang()),
+                          );
+                        },
+                        child:
+                        Text(
+                              'Đơn hàng',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
                       ),
                     ],
                   ),
+
+
+
                   Column(
                     children: [
                       SizedBox(
