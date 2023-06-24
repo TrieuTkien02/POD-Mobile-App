@@ -4,8 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 
 import '../Values/app_assets.dart';
 import '../constants/routes.dart';
-import 'DangIn.dart';
 import 'DangVanChuyen.dart';
+import 'DonHang.dart';
 import 'DonHoanThanh.dart';
 import 'DonHuy.dart';
 import 'TrangCaNhan.dart';
@@ -15,16 +15,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MaterialApp(
-    home: Donhang(),
+    home: DonDangIn(),
   ));
 }
 
-class Donhang extends StatefulWidget {
+class DonDangIn extends StatefulWidget {
   @override
-  _DonhangState createState() => _DonhangState();
+  _DonDangInState createState() => _DonDangInState();
 }
 
-class _DonhangState extends State<Donhang> {
+class _DonDangInState extends State<DonDangIn> {
   late Stream<QuerySnapshot<Map<String, dynamic>>> _ordersStream;
   List<DocumentSnapshot> _pendingOrders = [];
 
@@ -64,26 +64,15 @@ class _DonhangState extends State<Donhang> {
             children: [
               SizedBox(width: 2),
               Expanded(
-                child: Text(
-                  'Đơn chờ xử lý',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
                 child: InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DonDangIn()),
+                      MaterialPageRoute(builder: (context) => Donhang()),
                     );
                   },
                   child: Text(
-                    'Đơn đang in',
+                    'Đơn chờ xử lý',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -94,6 +83,17 @@ class _DonhangState extends State<Donhang> {
                 ),
               ),
 
+              Expanded(
+                child: Text(
+                  'Đơn đang in',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
               Expanded(
                 child: InkWell(
                   onTap: () {
@@ -135,16 +135,6 @@ class _DonhangState extends State<Donhang> {
               ),
 
               Expanded(
-                child: Text(
-                  'Đơn đã hủy',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),Expanded(
                 child: InkWell(
                   onTap: () {
                     Navigator.push(
@@ -183,12 +173,12 @@ class _DonhangState extends State<Donhang> {
                 _pendingOrders = orders
                     .where((order) =>
                 order.data().containsKey('status') &&
-                    order.data()['status'] == 'Đang chờ' &&
+                    order.data()['status'] == 'Đang in' &&
                     order.data()['products'][0]?['partner'] == 'username')
                     .toList();
 
                 if (_pendingOrders.isEmpty) {
-                  return Center(child: Text('Không có đơn hàng đang chờ.'));
+                  return Center(child: Text('Không có đơn hàng đang in.'));
                 }
 
                 return GridView.count(
@@ -238,41 +228,9 @@ class _DonhangState extends State<Donhang> {
                                       ],
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            _updateOrderStatus(order.id, 'Đã xác nhận');
-                                          },
-                                          child: Text('Xác Nhận'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    '',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Spacer(),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      _updateOrderStatus(order.id, 'Đã Hủy');
-                                    },
-                                    child: Text('Hủy'),
-                                  ),
-                                ],
-                              ),
+
                             ],
                           ),
                         ),
@@ -347,19 +305,37 @@ class _DonhangState extends State<Donhang> {
                 ),
                 Column(
                   children: [
+
                     IconButton(
                       icon: Icon(Icons.shopping_bag),
                       color: Colors.blue,
-                      onPressed: () {},
+                      onPressed: (
+
+                          ) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Donhang()),
+                        );
+                      },
                     ),
-                    Text(
-                      'Đơn hàng',
-                      style: TextStyle(
-                        color: Colors.blue,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Donhang()),
+                        );
+                      },
+                      child:
+                      Text(
+                        'Đơn hàng',
+                        style: TextStyle(
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
                   ],
                 ),
+
                 Column(
                   children: [
                     SizedBox(

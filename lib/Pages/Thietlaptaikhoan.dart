@@ -26,7 +26,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   Future<void> fetchUserProfile() async {
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
         .collection('Partner')
         .doc('username') // Thay 'username' bằng giá trị tương ứng
         .get();
@@ -110,6 +111,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   hintText: 'Nhập tên shop',
                   border: OutlineInputBorder(),
                 ),
+                controller: TextEditingController(text: shopName),
               ),
               SizedBox(height: 32.0),
               Text(
@@ -193,13 +195,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
     File file = File(filePath);
 
     try {
-      final String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-      final Reference storageRef = FirebaseStorage.instance.ref().child('images/$fieldName/$imageName.jpg');
+      final String imageName = DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString();
+      final Reference storageRef = FirebaseStorage.instance.ref().child(
+          'images/$fieldName/$imageName.jpg');
       final UploadTask uploadTask = storageRef.putFile(file);
       final TaskSnapshot storageSnapshot = await uploadTask.whenComplete(() {});
       final String imageUrl = await storageSnapshot.ref.getDownloadURL();
 
-      // Cập nhật đường dẫn ảnh trong Firestore
       await FirebaseFirestore.instance
           .collection('Partner')
           .doc('username') // Thay 'username' bằng giá trị thích hợp
@@ -213,7 +218,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   ImageProvider<Object> _getAvatarImageProvider() {
     if (avatarUrl.isNotEmpty) {
-      return FileImage(File(avatarUrl));
+      if (avatarUrl.startsWith('http')) {
+        return CachedNetworkImageProvider(avatarUrl);
+      } else {
+        return FileImage(File(avatarUrl));
+      }
     } else {
       return AssetImage(AppAssets.anhdaidien);
     }
@@ -221,7 +230,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   ImageProvider<Object> _getCoverImageProvider() {
     if (coverImageUrl.isNotEmpty) {
-      return FileImage(File(coverImageUrl));
+      if (coverImageUrl.startsWith('http')) {
+        return CachedNetworkImageProvider(coverImageUrl);
+      } else {
+        return FileImage(File(coverImageUrl));
+      }
     } else {
       return AssetImage(AppAssets.anhbia);
     }

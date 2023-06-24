@@ -7,6 +7,9 @@ import 'package:partnerapp/Pages/TrangChu.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'DonHang.dart';
+import 'TrangCaNhan.dart';
+
 void main() {
   runApp(Sanpham());
 }
@@ -463,15 +466,32 @@ class _MyHomePageState extends State<Sanpham> {
                   ),
                   Column(
                     children: [
+
                       IconButton(
                         icon: Icon(Icons.shopping_bag),
                         color: Colors.black,
-                        onPressed: () {},
+                        onPressed: (
+
+                            ) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Donhang()),
+                          );
+                        },
                       ),
-                      Text(
-                        'Đơn hàng',
-                        style: TextStyle(
-                          color: Colors.black,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Donhang()),
+                          );
+                        },
+                        child:
+                        Text(
+                          'Đơn hàng',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ],
@@ -481,17 +501,29 @@ class _MyHomePageState extends State<Sanpham> {
                       SizedBox(
                         height: 13.0,
                       ),
-                      CircleAvatar(
-                        backgroundImage: AssetImage(AppAssets.anhdaidien),
-                        radius: 13.0,
+                      InkWell(
+                        onTap: () {
+                          // Xử lý sự kiện khi nhấp vào ảnh
+                          Routes.instance.push(widget: Trangcanhan(), context: context ); // Gọi hàm để chuyển đến trang cá nhân
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(AppAssets.anhdaidien),
+                          radius: 13.0,
+                        ),
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
-                      Text(
-                        'Trang cá nhân',
-                        style: TextStyle(
-                          color: Colors.black,
+                      InkWell(
+                        onTap: () {
+                          // Xử lý sự kiện khi nhấp vào chữ
+                          Routes.instance.push(widget: Trangcanhan(), context: context ); // Gọi hàm để chuyển đến trang cá nhân
+                        },
+                        child: Text(
+                          'Trang cá nhân',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ],

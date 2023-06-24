@@ -3,6 +3,8 @@ import 'package:partnerapp/Pages/Thietlaptaikhoan.dart';
 import '../Values/app_assets.dart';
 import 'package:partnerapp/constants/routes.dart';
 import 'package:partnerapp/Pages/TrangChu.dart';
+
+import 'DonHang.dart';
 class Trangcanhan extends StatefulWidget {
   @override
   _Trangcanhanstate createState() => _Trangcanhanstate();
@@ -438,7 +440,7 @@ class _Trangcanhanstate extends State<Trangcanhan> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.home),
-                        color: Colors.blue,
+                        color: Colors.black,
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -456,7 +458,7 @@ class _Trangcanhanstate extends State<Trangcanhan> {
                         child: Text(
                           'Trang chủ',
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -483,15 +485,32 @@ class _Trangcanhanstate extends State<Trangcanhan> {
                 ),
                 Column(
                   children: [
+
                     IconButton(
                       icon: Icon(Icons.shopping_bag),
                       color: Colors.black,
-                      onPressed: () {},
+                      onPressed: (
+
+                          ) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Donhang()),
+                        );
+                      },
                     ),
-                    Text(
-                      'Đơn hàng',
-                      style: TextStyle(
-                        color: Colors.black,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Donhang()),
+                        );
+                      },
+                      child:
+                      Text(
+                        'Đơn hàng',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
@@ -507,7 +526,7 @@ class _Trangcanhanstate extends State<Trangcanhan> {
                     Text(
                       'Trang cá nhân',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.blue,
                       ),
                     ),
                   ],

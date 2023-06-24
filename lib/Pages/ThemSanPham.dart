@@ -10,6 +10,10 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:partnerapp/Pages/Sanpham.dart';
+
+import '../constants/routes.dart';
+import 'DonHang.dart';
+import 'TrangCaNhan.dart';
 void main() {
   runApp(ThemSanPham());
 }
@@ -1022,31 +1026,64 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                 ),
                 Column(
                   children: [
+
                     IconButton(
                       icon: Icon(Icons.shopping_bag),
                       color: Colors.black,
-                      onPressed: () {},
+                      onPressed: (
+
+                          ) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Donhang()),
+                        );
+                      },
                     ),
-                    Text(
-                      'Đơn hàng',
-                      style: TextStyle(
-                        color: Colors.black,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Donhang()),
+                        );
+                      },
+                      child:
+                      Text(
+                        'Đơn hàng',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 Column(
                   children: [
-                    SizedBox(height: 13.0,),
-                    CircleAvatar(
-                      backgroundImage: AssetImage(AppAssets.anhdaidien),
-                      radius: 13.0,
+                    SizedBox(
+                      height: 13.0,
                     ),
-                    SizedBox(height: 10.0,),
-                    Text(
-                      'Trang cá nhân',
-                      style: TextStyle(
-                        color: Colors.black,
+                    InkWell(
+                      onTap: () {
+                        // Xử lý sự kiện khi nhấp vào ảnh
+                        Routes.instance.push(widget: Trangcanhan(), context: context ); // Gọi hàm để chuyển đến trang cá nhân
+                      },
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage(AppAssets.anhdaidien),
+                        radius: 13.0,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // Xử lý sự kiện khi nhấp vào chữ
+                        Routes.instance.push(widget: Trangcanhan(), context: context ); // Gọi hàm để chuyển đến trang cá nhân
+                      },
+                      child: Text(
+                        'Trang cá nhân',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
