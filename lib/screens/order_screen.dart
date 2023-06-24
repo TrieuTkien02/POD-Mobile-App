@@ -4,8 +4,7 @@ import '../firebase_support/firebase_firestore.dart';
 import '../models/order_model.dart';
 
 class OrderScreen extends StatelessWidget {
-  const OrderScreen({super.key});
-
+  const OrderScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,19 +18,15 @@ class OrderScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: StreamBuilder(
-        stream: Stream.fromFuture(
-          FirebaseFirestoreHelper.instance.getUserOrder(),
-        ),
+      body: StreamBuilder<List<OrderModel>>(
+        stream: FirebaseFirestoreHelper.instance.getUserOrderStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
-          if (snapshot.data!.isEmpty ||
-              snapshot.data == null ||
-              !snapshot.hasData) {
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
               child: Text(
                 "Không tìm thấy đơn đặt hàng",
@@ -40,13 +35,15 @@ class OrderScreen extends StatelessWidget {
             );
           }
 
+          List<OrderModel> orderList = snapshot.data!;
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 50.0),
             child: ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: orderList.length,
               padding: const EdgeInsets.all(12.0),
               itemBuilder: (context, index) {
-                OrderModel orderModel = snapshot.data![index];
+                OrderModel orderModel = orderList[index];
                 final priceFormat = NumberFormat("#,###");
                 final formattedPrice = priceFormat
                     .format(orderModel.totalPrice.toInt())
@@ -75,14 +72,14 @@ class OrderScreen extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 orderModel.products[0].name,
                                 style: const TextStyle(
-                                    fontSize: 13.0,
+                                    fontSize: 15.0,
                                     fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
@@ -92,11 +89,48 @@ class OrderScreen extends StatelessWidget {
                                   ? SizedBox.fromSize()
                                   : Column(
                                       children: [
-                                        Text(
-                                          "Số lượng: ${orderModel.products[0].qty.toString()}",
-                                          style: const TextStyle(
-                                            fontSize: 13.0,
-                                          ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Số lượng: ${orderModel.products[0].qty.toString()}",
+                                              style: const TextStyle(
+                                                fontSize: 13.0,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(
+                                              "  Size: ${orderModel.products[0].size}",
+                                              style: const TextStyle(
+                                                fontSize: 13.0,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            const Text(
+                                              "  Màu:",
+                                              style: TextStyle(
+                                                fontSize: 13.0,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.all(16 / 4),
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: CircleAvatar(
+                                                radius: 10,
+                                                backgroundColor: Color(
+                                                    int.parse(
+                                                        orderModel
+                                                            .products[0].color,
+                                                        radix: 16)),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         const SizedBox(
                                           height: 12.0,
@@ -113,10 +147,11 @@ class OrderScreen extends StatelessWidget {
                                 height: 12.0,
                               ),
                               Text(
-                                "Tình trạng đơn hàng: ${orderModel.status}",
+                                "Tình trạng: ${orderModel.status}",
                                 style: const TextStyle(
-                                  fontSize: 13.0,
-                                ),
+                                    fontSize: 13.0,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -125,7 +160,11 @@ class OrderScreen extends StatelessWidget {
                     ),
                     children: orderModel.products.length > 1
                         ? [
-                            const Text("Chi tiết"),
+                            const Text(
+                              "Chi tiết",
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.w500),
+                            ),
                             Divider(color: Theme.of(context).primaryColor),
                             ...orderModel.products.map((singleProduct) {
                               return Padding(
@@ -157,20 +196,60 @@ class OrderScreen extends StatelessWidget {
                                               Text(
                                                 singleProduct.name,
                                                 style: const TextStyle(
-                                                    fontSize: 10.0,
+                                                    fontSize: 13.0,
                                                     fontWeight:
-                                                        FontWeight.w500),
+                                                        FontWeight.bold),
                                               ),
                                               const SizedBox(
                                                 height: 12.0,
                                               ),
                                               Column(
                                                 children: [
-                                                  Text(
-                                                    "Số lượng: ${singleProduct.qty.toString()}",
-                                                    style: const TextStyle(
-                                                      fontSize: 10.0,
-                                                    ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "Số lượng: ${singleProduct.qty.toString()}",
+                                                        style: const TextStyle(
+                                                          fontSize: 13.0,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      Text(
+                                                        "  Size: ${singleProduct.size}",
+                                                        style: const TextStyle(
+                                                          fontSize: 13.0,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      const Text(
+                                                        "  Màu:",
+                                                        style: TextStyle(
+                                                          fontSize: 13.0,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(16 / 4),
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 10,
+                                                          backgroundColor:
+                                                              Color(int.parse(
+                                                                  singleProduct
+                                                                      .color,
+                                                                  radix: 16)),
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
                                                   const SizedBox(
                                                     height: 12.0,
@@ -178,9 +257,9 @@ class OrderScreen extends StatelessWidget {
                                                 ],
                                               ),
                                               Text(
-                                                "Giá: \$${singleProduct.price.toString()}",
+                                                "${priceFormat.format((singleProduct.price * singleProduct.qty!).toInt()).replaceAll(',', '.')} VNĐ",
                                                 style: const TextStyle(
-                                                  fontSize: 10.0,
+                                                  fontSize: 13.0,
                                                 ),
                                               ),
                                             ],

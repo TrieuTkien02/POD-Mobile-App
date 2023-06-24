@@ -16,13 +16,14 @@ class AboutUs extends StatelessWidget {
         ),
       ),
       body: const Padding(
-        padding: EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(20.0),
         child: Text(
           textAlign: TextAlign.start,
-          "\nỨng dụng POD Market là đồ án môn học Đồ án chuyên ngành - NT114.N21\n\nĐược thực hiện bởi sinh viên: Trần Triệu Thiên - 20521954",
+          "\nỨng dụng POD Market là 1 trong 3 ứng dụng của đồ án môn học Đồ án chuyên ngành - NT114.N21\n\nPOD Market được thực hiện bởi sinh viên:\nTrần Triệu Thiên - 20521954\n\nContact:\n1) PhoneNumber: 0338027429\n2) Email: trieuthien16102002@gmail.com",
           style: TextStyle(
             color: Colors.red,
             fontSize: 15,
+            fontWeight: FontWeight.bold
           ),
         ),
       ),

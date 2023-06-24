@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_unnecessary_containers
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../constants/routes.dart';
 import '../../models/product_model.dart';
 import '../cart_screen/cart_screen.dart';
+import '../product_reviews/get_product_reviews.dart';
 import 'bottom_sheet.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -20,6 +20,8 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  bool isLoading = false;
+
   int qty = 1;
   bool isExpanded = false;
 
@@ -28,6 +30,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     AppProvider appProvider = Provider.of<AppProvider>(
       context,
     );
+
     final priceFormat = NumberFormat("#,###");
     final formattedPrice = priceFormat
         .format(widget.singleProduct.price.toInt())
@@ -99,7 +102,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   RatingBar.builder(
                     unratedColor: const Color.fromARGB(255, 223, 221, 221),
                     itemSize: 28,
-                    initialRating: 3.5,
+                    initialRating: 4,
                     minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: true,
@@ -151,14 +154,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     onPressed: () {
                       ProductModel productModel =
                           widget.singleProduct.copyWith(qty: qty);
-                      // appProvider.addCartProduct(productModel);
                       showModalBottomSheet(
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            builder: (context) {
-                              return CustomBottomSheet(
-                                  singleProduct: productModel);
-                            });
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (context) {
+                            return CustomBottomSheet(
+                                singleProduct: productModel);
+                          });
                     },
                     child: const Text("Thêm vào giỏ hàng"),
                   ),
@@ -176,10 +178,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                       onPressed: () {
                         ProductModel productModel =
                             widget.singleProduct.copyWith(qty: qty);
-                        // Routes.instance.push(
-                        //     widget:
-                        //         CustomBottomSheet(singleProduct: productModel),
-                        //     context: context);
                         showModalBottomSheet(
                             backgroundColor: Colors.transparent,
                             context: context,
@@ -235,18 +233,45 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ),
               ),
               const SizedBox(
+                width: 30,
+              ),
+              const SizedBox(
                 height: 10.0,
               ),
-              const Text(
-                "Đánh giá sản phẩm:",
-                textAlign: TextAlign.left,
-                softWrap: true,
-                textScaleFactor: 1.2,
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 14,
-                    wordSpacing: 1.5,
-                    fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Đánh giá sản phẩm:",
+                    textAlign: TextAlign.left,
+                    softWrap: true,
+                    textScaleFactor: 1.2,
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 14,
+                        wordSpacing: 1.5,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Routes.instance.push(
+                        widget: ProductReviewsPage(
+                            productName: widget.singleProduct.name),
+                        context: context,
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      primary: Colors.black,
+                    ),
+                    child: const Text(
+                      "Xem đánh giá sản phẩm",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 60.0,

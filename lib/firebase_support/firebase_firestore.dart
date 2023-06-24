@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pod_market/models/ReviewModel.dart';
 import 'package:pod_market/models/sale_model.dart';
 import '../constants/constants.dart';
 import '../models/category_model.dart';
@@ -98,7 +99,12 @@ class FirebaseFirestoreHelper {
   }
 
   Future<bool> uploadOrderedProductFirebase(
-      List<ProductModel> list, BuildContext context, String payment) async {
+      List<ProductModel> list,
+      BuildContext context,
+      String name,
+      String phone,
+      String address,
+      String payment) async {
     try {
       showLoaderDialog(context);
       double totalPrice = 0.0;
@@ -117,7 +123,10 @@ class FirebaseFirestoreHelper {
         "status": "Đang chờ",
         "totalPrice": totalPrice,
         "payment": payment,
-        "orderId": admin.id,
+        "orderId": documentReference.id,
+        "nameUser": name,
+        "phoneUser": phone,
+        "addressUser": address,
       });
       documentReference.set({
         "products": list.map((e) => e.toJson()),
@@ -125,6 +134,9 @@ class FirebaseFirestoreHelper {
         "totalPrice": totalPrice,
         "payment": payment,
         "orderId": documentReference.id,
+        "nameUser": name,
+        "phoneUser": phone,
+        "addressUser": address,
       });
       Navigator.of(context, rootNavigator: true).pop();
       showMessage("Đặt hàng thành công");
@@ -136,24 +148,74 @@ class FirebaseFirestoreHelper {
     }
   }
 
-  Future<List<OrderModel>> getUserOrder() async {
+  Stream<List<OrderModel>> getUserOrderStream() {
     try {
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _firebaseFirestore
+      Stream<QuerySnapshot<Map<String, dynamic>>> queryStream =
+          _firebaseFirestore
               .collection("usersOrders")
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .collection("orders")
-              .get();
+              .snapshots();
 
-      List<OrderModel> orderList = querySnapshot.docs
-          .map((element) => OrderModel.fromJson(element.data()))
-          .toList();
+      return queryStream.map((querySnapshot) {
+        List<String> orderIdList = querySnapshot.docs
+            .map((doc) => doc.data()["orderId"] as String)
+            .toList();
 
-      return orderList;
+        return _firebaseFirestore
+            .collection("orders")
+            .where("orderId", whereIn: orderIdList)
+            .get()
+            .then((orderSnapshot) {
+          List<OrderModel> orderList = orderSnapshot.docs
+              .map((element) => OrderModel.fromJson(element.data()))
+              .toList();
+
+          return orderList;
+        });
+      }).asyncMap((future) => future);
     } catch (e) {
       //showMessage(e.toString());
-      return [];
+      return Stream.value([]); // Trả về một Stream rỗng trong trường hợp lỗi
     }
+  }
+
+  //Add Reviews
+  Future<void> addReview(String productName, ReviewModel review) async {
+    CollectionReference<Map<String, dynamic>> reviewsCollection =
+        _firebaseFirestore.collection("reviews");
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await reviewsCollection
+        .where("productName", isEqualTo: productName)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
+      await reviewsCollection.add({"productName": productName});
+    }
+
+    DocumentReference<Map<String, dynamic>> productDocument =
+        reviewsCollection.doc(productName);
+
+    await productDocument.collection("reviews").add(review.toJson());
+  }
+
+  //Get Reviews
+  Future<List<ReviewModel>> getReviews(String productName) async {
+    CollectionReference<Map<String, dynamic>> reviewsCollection =
+        _firebaseFirestore.collection("reviews");
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await reviewsCollection.doc(productName).collection("reviews").get();
+
+    List<ReviewModel> reviewsList = [];
+
+    for (DocumentSnapshot<Map<String, dynamic>> reviewDoc
+        in querySnapshot.docs) {
+      ReviewModel review = ReviewModel.fromJson(reviewDoc.data()!);
+      reviewsList.add(review);
+    }
+
+    return reviewsList;
   }
 
   // void updateTokenFromFirebase() async {

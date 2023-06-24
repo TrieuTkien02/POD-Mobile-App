@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pod_market/constants/constants.dart';
@@ -201,6 +200,7 @@ class _CheckoutState extends State<Checkout> {
               ),
               TextFormField(
                 controller: phoneController,
+                keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(
                   labelText: 'Số điện thoại người nhận',
                   border: OutlineInputBorder(),
@@ -318,6 +318,9 @@ class _CheckoutState extends State<Checkout> {
                           .uploadOrderedProductFirebase(
                         appProvider.getBuyProductList,
                         context,
+                        nameController.text,
+                        phoneController.text,
+                        addressController.text,
                         "Thanh toán khi giao hàng",
                       );
 
@@ -337,6 +340,9 @@ class _CheckoutState extends State<Checkout> {
                       String totalPrice = (value * 100).toString();
                       await StripeHelper.instance.makePayment(
                         totalPrice.toString(),
+                        nameController.text,
+                        phoneController.text,
+                        addressController.text,
                         context,
                       );
                     }

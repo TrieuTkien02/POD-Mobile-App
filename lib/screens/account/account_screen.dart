@@ -6,6 +6,8 @@ import '../../firebase_support/firebase_auth_helper.dart';
 import '../../provider/app_provider.dart';
 import '../about_us.dart';
 import '../order_screen.dart';
+import '../product_reviews/add_product_review.dart';
+import '../product_reviews/get_product_reviews.dart';
 import 'change_password.dart';
 import 'edit_profile.dart';
 import '../favourite_screen/favourite_screen.dart';
@@ -35,7 +37,7 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
       ),
-      body: Column( 
+      body: Column(
         children: [
           Expanded(
             child: Column(
@@ -50,12 +52,18 @@ class _AccountScreenState extends State<AccountScreen> {
                             NetworkImage(appProvider.getUserInformation.image!),
                         radius: 60,
                       ),
+                const SizedBox(
+                  height: 12.0,
+                ),
                 Text(
                   appProvider.getUserInformation.name,
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
+                ),
+                const SizedBox(
+                  height: 8.0,
                 ),
                 Text(
                   appProvider.getUserInformation.email,
@@ -64,23 +72,29 @@ class _AccountScreenState extends State<AccountScreen> {
                   height: 12.0,
                 ),
                 SizedBox(
-                height: 40,
-                width: 130,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red),
-                  ),
-                  onPressed: () {
-                   Routes.instance
+                  height: 50,
+                  width: 150,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.red),
+                    ),
+                    onPressed: () {
+                      Routes.instance
                           .push(widget: const EditProfile(), context: context);
-                  },
-                  child: const Text(
-                    "Sửa hồ sơ",
-                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                    },
+                    child: const Text(
+                      "Sửa hồ sơ",
+                      style:
+                          TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              ),
               ],
             ),
           ),
@@ -88,6 +102,17 @@ class _AccountScreenState extends State<AccountScreen> {
             flex: 2,
             child: Column(
               children: [
+                const SizedBox(
+                  height: 18.0,
+                ),
+                ListTile(
+                  onTap: () {
+                    Routes.instance
+                        .push(widget: AddReviews(), context: context);
+                  },
+                  leading: const Icon(Icons.star_border),
+                  title: const Text("Đánh giá sản phẩm"),
+                ),
                 ListTile(
                   onTap: () {
                     Routes.instance
@@ -114,6 +139,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
                 ListTile(
                   onTap: () {
+                    // Routes.instance
+                    //     .push(widget: const ChangePassword(), context: context);
+                  },
+                  leading: const Icon(Icons.support_outlined),
+                  title: const Text("Hỗ trợ"),
+                ),
+                ListTile(
+                  onTap: () {
                     Routes.instance
                         .push(widget: const ChangePassword(), context: context);
                   },
@@ -128,10 +161,6 @@ class _AccountScreenState extends State<AccountScreen> {
                   leading: const Icon(Icons.exit_to_app),
                   title: const Text("Đăng xuất"),
                 ),
-                const SizedBox(
-                  height: 12.0,
-                ),
-                const Text("Phiên bản 1.0.0")
               ],
             ),
           ),

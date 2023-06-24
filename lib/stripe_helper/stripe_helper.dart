@@ -13,7 +13,8 @@ class StripeHelper {
   static StripeHelper instance = StripeHelper();
 
   Map<String, dynamic>? paymentIntent;
-  Future<void> makePayment(String amount, BuildContext context) async {
+  Future<void> makePayment(String amount, String name, String phone,
+      String address, BuildContext context) async {
     try {
       paymentIntent = await createPaymentIntent(amount, 'USD');
 
@@ -32,19 +33,20 @@ class StripeHelper {
           .then((value) {});
 
       //STEP 3: Display Payment sheet
-      displayPaymentSheet(context);
+      displayPaymentSheet(context, name, phone, address);
     } catch (err) {
       showMessage(err.toString());
     }
   }
 
-  displayPaymentSheet(BuildContext context) async {
+  displayPaymentSheet(
+      BuildContext context, String name, String phone, String address) async {
     AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
     try {
       await Stripe.instance.presentPaymentSheet().then((value) async {
         bool value = await FirebaseFirestoreHelper.instance
-            .uploadOrderedProductFirebase(
-                appProvider.getBuyProductList, context, "Đã thanh toán Online");
+            .uploadOrderedProductFirebase(appProvider.getBuyProductList,
+                context, name, phone, address, "Đã thanh toán Online");
 
         appProvider.clearBuyProduct();
         if (value) {
