@@ -5,17 +5,19 @@ import 'package:pod_market/constants/constants.dart';
 import 'package:provider/provider.dart';
 
 import '../../firebase_support/firebase_firestore.dart';
-import '../../models/ReviewModel.dart';
+import '../../models/review_model.dart';
 import '../../provider/app_provider.dart';
 import '../../widgets/primary_button.dart';
 
 class AddReviewDetails extends StatefulWidget {
   final String productName;
+  final String partnerName;
 
-  AddReviewDetails({required this.productName});
+  AddReviewDetails({required this.productName, required this.partnerName});
 
   @override
-  _AddReviewPageState createState() => _AddReviewPageState(productName: productName);
+  _AddReviewPageState createState() =>
+      _AddReviewPageState(productName: productName, partnerName: partnerName);
 }
 
 class _AddReviewPageState extends State<AddReviewDetails> {
@@ -23,8 +25,9 @@ class _AddReviewPageState extends State<AddReviewDetails> {
   final TextEditingController _commentController = TextEditingController();
   int _rating = 1;
   final String productName;
+  final String partnerName;
 
-  _AddReviewPageState({required this.productName});
+  _AddReviewPageState({required this.productName, required this.partnerName});
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +111,14 @@ class _AddReviewPageState extends State<AddReviewDetails> {
                 if (!_commentController.text.isEmpty) {
                   String comment = _commentController.text;
                   String name = appProvider.getUserInformation.name;
-                  ReviewModel review = ReviewModel(reviewerName: name, comment: comment, rating: _rating.toString());
-                  await FirebaseFirestoreHelper.instance.addReview(productName, review);
+                  ReviewModel review = ReviewModel(
+                    reviewerName: name,
+                    comment: comment,
+                    rating: _rating.toString(),
+                    partner: partnerName,
+                  );
+                  await FirebaseFirestoreHelper.instance
+                      .addReview(productName, review);
                   Navigator.pop(context);
                   showMessage("Thêm đánh giá thành công");
                 } else {

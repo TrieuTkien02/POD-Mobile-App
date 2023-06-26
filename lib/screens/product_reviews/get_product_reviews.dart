@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../firebase_support/firebase_firestore.dart';
-import '../../models/ReviewModel.dart';
+import '../../models/review_model.dart';
 
 class ProductReviewsPage extends StatefulWidget {
   final String productName;

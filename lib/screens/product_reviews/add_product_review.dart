@@ -100,7 +100,7 @@ class AddReviews extends StatelessWidget {
                               OutlinedButton(
                                 onPressed: () {
                                   Routes.instance.push(
-                                      widget: AddReviewDetails(productName: orderModel.products[0].name),
+                                      widget: AddReviewDetails(productName: orderModel.products[0].name, partnerName: orderModel.products[0].partner),
                                       context: context);
                                 },
                                 child: const Text("Thêm đánh giá"),
@@ -168,7 +168,7 @@ class AddReviews extends StatelessWidget {
                                                 onPressed: () {
                                                   Routes.instance.push(
                                                       widget:
-                                                          AddReviewDetails(productName: singleProduct.name),
+                                                          AddReviewDetails(productName: singleProduct.name, partnerName: singleProduct.partner),
                                                       context: context);
                                                 },
                                                 child:
