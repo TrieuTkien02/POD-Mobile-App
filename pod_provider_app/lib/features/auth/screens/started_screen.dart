@@ -1,8 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:pod_provider_app/features/auth/screens/sign.dart';
 
 
 class Started extends StatelessWidget {
+  static const routeName = '/started-screen';
+  const Started({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,8 +20,8 @@ class Started extends StatelessWidget {
               height: 300,
             ),
             Container(
-              margin: EdgeInsets.only( bottom: 100,left: 30, right: 20),
-              child: Text(
+              margin:const EdgeInsets.only( bottom: 100,left: 30, right: 20),
+              child:const Text(
                 "Biến những ý tưởng\n và phong cách \n thành hiện thực.",
                 style: TextStyle(
                   color: Colors.black,
@@ -28,15 +32,15 @@ class Started extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushReplacementNamed(context, "Sign");
+                Navigator.pushNamed(context, Sign.routeName);
               },
               child: Ink(
-                padding: EdgeInsets.symmetric(horizontal: 80, vertical: 16),
+                padding:const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  color: Color(0xFF34332D),
+                  color:const Color(0xFF34332D),
                 ),
-                child: Text(
+                child:const Text(
                   "Tiếp tục",
                   style: TextStyle(color: Colors.white,),
                 ),
