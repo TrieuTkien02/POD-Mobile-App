@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
 import '../Values/app_assets.dart';
 import '../constants/routes.dart';
+import '../provider/user_provider.dart';
 import 'DangIn.dart';
 import 'DonHang.dart';
 import 'DonHoanThanh.dart';
@@ -47,6 +49,7 @@ class _DangVanChuyenState extends State<DangVanChuyen> {
 
   @override
   Widget build(BuildContext context) {
+    String username = Provider.of<UserProvider>(context).username;
     return Scaffold(
       appBar: AppBar(
         title: Text('Flutter Column Example'),
@@ -173,7 +176,7 @@ class _DangVanChuyenState extends State<DangVanChuyen> {
                     .where((order) =>
                 order.data().containsKey('status') &&
                     order.data()['status'] == 'Đang vận chuyển' &&
-                    order.data()['products'][0]?['partner'] == 'username')
+                    order.data()['products'][0]?['partner'] == username)
                     .toList();
 
                 if (_pendingOrders.isEmpty) {

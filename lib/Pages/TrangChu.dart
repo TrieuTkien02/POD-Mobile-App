@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:partnerapp/Pages/TrangCaNhan.dart';
 import 'package:partnerapp/Values/app_assets.dart';
+import 'package:provider/provider.dart';
 import '../../constants/routes.dart';
 import 'package:partnerapp/Pages/ThemSanPham.dart';
 import 'package:partnerapp/models/PullProduct.dart';
@@ -9,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:partnerapp/Pages/DonHang.dart';
+import '../provider/user_provider.dart';
+
 void main() {
   runApp(MyHomePage());
 }
@@ -103,17 +106,19 @@ class _MyHomePageState extends State<MyHomePage> {
   String avatarUrl = '';
   String coverImageUrl = '';
   String shopName = '';
+  late String username;
 
   @override
   void initState() {
     super.initState();
-    fetchUserProfile();
+    username = Provider.of<UserProvider>(context, listen: false).username;
+    fetchUserProfile(username);
   }
 
-  Future<void> fetchUserProfile() async {
+  Future<void> fetchUserProfile(String username) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
         .collection('Partner')
-        .doc('username') // Thay 'username' bằng giá trị tương ứng
+        .doc(username) // Thay 'username' bằng giá trị tương ứng
         .get();
 
     if (snapshot.exists) {
@@ -124,8 +129,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -301,7 +304,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
         Expanded(
           child: FutureBuilder<List<Product>>(
-            future: fetchAllProducts('username'),
+            future: fetchAllProducts(username),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final products = snapshot.data!;
@@ -484,4 +487,5 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
 }

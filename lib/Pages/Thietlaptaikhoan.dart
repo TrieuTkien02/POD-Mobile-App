@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -7,6 +8,14 @@ import 'package:firebase_storage/firebase_storage.dart' show FirebaseStorage, Up
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:partnerapp/Values/app_assets.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/widgets.dart';
+import '../provider/user_provider.dart';
+
+
+void main() {
+  runApp(UserProfilePage());
+}
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -18,18 +27,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String coverImageUrl = '';
   String shopName = '';
   String newPassword = '';
-
+  late String username;
   @override
   void initState() {
     super.initState();
-    fetchUserProfile();
+
   }
 
-  Future<void> fetchUserProfile() async {
+  Future<void> fetchUserProfile(String username) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
         .collection('Partner')
-        .doc('username') // Thay 'username' bằng giá trị tương ứng
+        .doc(username) // Thay 'username' bằng giá trị tương ứng
         .get();
 
     if (snapshot.exists) {
@@ -43,6 +52,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    String username = Provider.of<UserProvider>(context).username;
+    fetchUserProfile(username);
     return Scaffold(
       appBar: AppBar(
         title: Text('Chỉnh sửa thông tin'),
@@ -170,7 +181,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     if (shopName.isNotEmpty) {
       FirebaseFirestore.instance
           .collection('Partner')
-          .doc('username') // Thay 'username' bằng giá trị thích hợp
+          .doc(username) // Thay 'username' bằng giá trị thích hợp
           .update({
         'avatarUrl': avatarUrl,
         'coverImageUrl': coverImageUrl,
@@ -207,7 +218,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
       await FirebaseFirestore.instance
           .collection('Partner')
-          .doc('username') // Thay 'username' bằng giá trị thích hợp
+          .doc(username) // Thay 'username' bằng giá trị thích hợp
           .update({fieldName: imageUrl});
 
       print('Cập nhật thông tin thành công');

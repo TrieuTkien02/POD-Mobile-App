@@ -5,6 +5,7 @@ import 'package:partnerapp/constants/routes.dart';
 import 'package:partnerapp/Pages/TrangChu.dart';
 
 import 'DonHang.dart';
+import 'login.dart';
 class Trangcanhan extends StatefulWidget {
   @override
   _Trangcanhanstate createState() => _Trangcanhanstate();
@@ -389,32 +390,41 @@ class _Trangcanhanstate extends State<Trangcanhan> {
                           ),
                         ),
 
-                        Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.logout,
-                                  size: 24.0,
-                                ),
-                                Text(
-                                  'Đăng xuất',
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Login()),
+                            );
+                          },
+                          child: Expanded(
+                            child: Container(
+                              color: Colors.white,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.logout,
+                                    size: 24.0,
                                   ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 16.0,
-                                ),
-                              ],
+                                  Text(
+                                    'Đăng xuất',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 16.0,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
+
 
                       ],
                     ),

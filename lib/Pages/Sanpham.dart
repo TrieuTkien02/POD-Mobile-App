@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:partnerapp/Values/app_assets.dart';
+import 'package:provider/provider.dart';
 import '../../constants/routes.dart';
 import 'package:partnerapp/Pages/ThemSanPham.dart';
 import 'package:partnerapp/models/PullProduct.dart';
@@ -7,6 +8,7 @@ import 'package:partnerapp/Pages/TrangChu.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../provider/user_provider.dart';
 import 'DonHang.dart';
 import 'TrangCaNhan.dart';
 
@@ -104,17 +106,18 @@ class _MyHomePageState extends State<Sanpham> {
   String avatarUrl = '';
   String coverImageUrl = '';
   String shopName = '';
-
+  late String username;
   @override
   void initState() {
     super.initState();
-    fetchUserProfile();
+    username = Provider.of<UserProvider>(context, listen: false).username;
+    fetchUserProfile(username);
   }
 
-  Future<void> fetchUserProfile() async {
+  Future<void> fetchUserProfile(String username) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
         .collection('Partner')
-        .doc('username') // Thay 'username' bằng giá trị tương ứng
+        .doc(username) // Thay 'username' bằng giá trị tương ứng
         .get();
 
     if (snapshot.exists) {
@@ -308,7 +311,7 @@ class _MyHomePageState extends State<Sanpham> {
                     child: FutureBuilder<QuerySnapshot>(
                       future: FirebaseFirestore.instance
                           .collection('Partner')
-                          .doc('username')
+                          .doc(username)
                           .collection('categories')
                           .get(),
                       builder: (context, snapshot) {
@@ -364,7 +367,7 @@ class _MyHomePageState extends State<Sanpham> {
                   ),
                   Expanded(
                     child: FutureBuilder<List<Product>>(
-                      future: fetchProducts('username', LoaiSanPham),
+                      future: fetchProducts(username, LoaiSanPham),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           final products = snapshot.data!;

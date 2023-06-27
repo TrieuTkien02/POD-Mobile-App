@@ -10,8 +10,10 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:partnerapp/Pages/Sanpham.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/routes.dart';
+import '../provider/user_provider.dart';
 import 'DonHang.dart';
 import 'TrangCaNhan.dart';
 void main() {
@@ -27,18 +29,19 @@ class _ThemSanPhamState extends State<ThemSanPham> {
   String avatarUrl = '';
   String coverImageUrl = '';
   String shopName = '';
-
+  late String username;
   @override
   void initState() {
     super.initState();
-    fetchUserProfile();
+    username = Provider.of<UserProvider>(context, listen: false).username;
+    fetchUserProfile(username);
     _selectedImage = null; // Khởi tạo _selectedImage với giá trị null
   }
 
-  Future<void> fetchUserProfile() async {
+  Future<void> fetchUserProfile(String username) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
         .collection('Partner')
-        .doc('username') // Thay 'username' bằng giá trị tương ứng
+        .doc(username) // Thay 'username' bằng giá trị tương ứng
         .get();
 
     if (snapshot.exists) {
@@ -941,8 +944,8 @@ class _ThemSanPhamState extends State<ThemSanPham> {
                         );
 
                         // Gọi hàm addProductToFirestore để đăng sản phẩm lên Firestore
-                        addProductToFirestore(newProduct);
-                        addProductToPartner(newProduct,'username');
+                        addProductToFirestore(newProduct,username);
+                        addProductToPartner(newProduct,username);
                       },
                       child: Text(
                         'Đăng bán',

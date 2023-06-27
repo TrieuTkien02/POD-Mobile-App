@@ -28,7 +28,7 @@ class Product {
   });
 }
 
-Future<void> addProductToFirestore(Product product) async {
+Future<void> addProductToFirestore(Product product,String username) async {
   try {
     // Khởi tạo Firebase
     await Firebase.initializeApp();
@@ -64,7 +64,7 @@ Future<void> addProductToFirestore(Product product) async {
         'size': product.size,
         'productionunit': product.productionunit,
         'color': product.color,
-        'partner':'username',
+        'partner':username,
       });
 
       print('Thêm sản phẩm vào collection của category thành công!');
