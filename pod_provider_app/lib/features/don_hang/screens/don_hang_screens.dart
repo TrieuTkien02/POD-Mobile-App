@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pod_provider_app/features/account/screens/account_screen.dart';
 import 'package:pod_provider_app/features/don_hang/screens/cho_xac_nhan.dart';
 import 'package:pod_provider_app/features/don_hang/screens/da_giao_hang.dart';
 import 'package:pod_provider_app/features/don_hang/screens/da_huy.dart';
@@ -108,7 +109,9 @@ class OrderStatusScreen extends StatelessWidget {
           } else if (index == 2) {
             Navigator.pushReplacementNamed(
                 context, OrderStatusScreen.routeName);
-          } else if (index == 3) {}
+          } else if (index == 3) {
+             Navigator.pushReplacementNamed(context, AccountScreen.routeName);
+          }
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
@@ -122,20 +125,5 @@ class OrderStatusScreen extends StatelessWidget {
     );
   }
 
-  Widget buildOrderStatusTile(
-      {required String status, required IconData icon, required Color color}) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: color,
-        child: Icon(
-          icon,
-          color: Colors.white,
-        ),
-      ),
-      title: Text(status),
-      subtitle: Text('Thông tin chi tiết về trạng thái'),
-      trailing: Icon(Icons.keyboard_arrow_right),
-      onTap: () {},
-    );
-  }
+ 
 }

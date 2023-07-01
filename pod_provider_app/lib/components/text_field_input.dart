@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -18,19 +19,18 @@ class TextFieldInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final inputBorder =
         OutlineInputBorder(borderSide: Divider.createBorderSide(context));
-        return TextField(
-          
-          controller: textEditingController,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: inputBorder,
-          focusedBorder: inputBorder,
-          enabledBorder: inputBorder,
-          filled: true,
-          contentPadding:  const EdgeInsets.all(8),
-        ),
-        keyboardType: textInputType,
-        obscureText: isPass,
-        );
+    return TextField(
+      controller: textEditingController,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: inputBorder,
+        focusedBorder: inputBorder,
+        enabledBorder: inputBorder,
+        filled: true,
+        contentPadding: const EdgeInsets.all(8),
+      ),
+      keyboardType: textInputType,
+      obscureText: isPass,
+    );
   }
 }

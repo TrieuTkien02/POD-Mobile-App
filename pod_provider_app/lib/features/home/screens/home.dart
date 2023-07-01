@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pod_provider_app/features/account/screens/account_screen.dart';
 import 'package:pod_provider_app/features/don_hang/screens/don_hang_screens.dart';
 import 'package:pod_provider_app/features/home/screens/add_product.dart';
 
@@ -153,7 +154,7 @@ class _HomeState extends State<Home> {
     } else if (index == 2) {
      Navigator.pushReplacementNamed(context, OrderStatusScreen.routeName);
     } else if (index == 3) {
-     
+      Navigator.pushReplacementNamed(context, AccountScreen.routeName);
     }
   },
   items: const [

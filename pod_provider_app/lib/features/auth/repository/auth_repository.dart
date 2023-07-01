@@ -9,6 +9,7 @@ class AuthRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   Future<String> signUpUser({
     required String email,
     required String password,
@@ -67,10 +68,33 @@ class AuthRepository {
     return res;
   }
 
-  Future<Future<List<void>>> signOut() async {
-    return Future.wait([
-      _auth.signOut(),
-      _googleSignIn.signOut(),
-    ]);
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
+
+  Future<String> editprofile({
+    required String name,
+    required Uint8List file,
+  }) async {
+    String res = "Có lỗi sảy ra";
+    try {
+      if (name.isNotEmpty || file != null) {
+        String photoUrl =
+            await StorageImage().uploadImageToStorage('profilePic', file);
+
+        await _firestore
+            .collection('Provider')
+            .doc(_auth.currentUser!.uid)
+            .update({
+          'name': name,
+          'photoUrl': photoUrl,
+        });
+
+        res = 'success';
+      }
+    } catch (err) {
+      return err.toString();
+    }
+    return res;
   }
 }

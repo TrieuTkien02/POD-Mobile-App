@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pod_provider_app/components/text_field_input.dart';
@@ -80,12 +78,6 @@ class _SignupState extends State<Signup> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  //logo
-                  // Image.asset(
-                  //   "images/LogoProvider.png",
-                  //   height: 250,
-                  // ),
-                  //avatar
                   Stack(
                     children: [
                       _image != null
@@ -143,7 +135,6 @@ class _SignupState extends State<Signup> {
                   const SizedBox(
                     height: 15,
                   ),
-                  // not a member? register now
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
