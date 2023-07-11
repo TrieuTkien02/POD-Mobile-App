@@ -2,27 +2,41 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SanXuatScreen extends StatelessWidget {
+class SanXuatScreen extends StatefulWidget {
   static const routeName = '/dang_san_xuat-screen';
+@override
+  _SanXuatScreenState createState() => _SanXuatScreenState();
+}
+
+class _SanXuatScreenState extends State<SanXuatScreen> {
+ final firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+  String nameuser = '';
 
   @override
-  Widget build(BuildContext context) {
-    final firestore = FirebaseFirestore.instance;
-    final _auth = FirebaseAuth.instance;
-    String nameuser = '';
+  void initState() {
+    super.initState();
+    _reloadData();
+  }
 
-    // Lấy giá trị nameuser từ Firestore
-    void getNameUser() async {
-      DocumentSnapshot snapshot = await firestore
-          .collection("Provider")
-          .doc(_auth.currentUser!.uid)
-          .get();
-      nameuser = snapshot.get('name');
-    }
-    getNameUser();
+  Future<void> _reloadData() async {
+    await getNameUser();
+    setState(() {});
+  }
+
+  Future<void> getNameUser() async {
+    DocumentSnapshot snapshot = await firestore
+        .collection("Provider")
+        .doc(_auth.currentUser!.uid)
+        .get();
+    nameuser = snapshot.get('name');
+  }
+  @override
+  Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đơn hàng đang sản xuất'),
+        title:const Text('Đơn hàng đang sản xuất'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('orders').snapshots(),
@@ -42,21 +56,16 @@ class SanXuatScreen extends StatelessWidget {
                 final addressUser = document['addressUser'] ?? '';
                 final nameUser = document['nameUser'] ?? '';
                 final orderId = document['orderId'] ?? '';
-                final payment = document['payment'] ?? '';
                 final phoneUser = document['phoneUser'] ?? '';
-                final totalPrice = document['totalPrice'] ?? 0;
 
                 final products = productionUnit.map<Widget>((product) {
                   final category = product['category'] ?? '';
                   final color = product['color'] ?? '';
-                  final description = product['description'] ?? '';
                   final imageUrl = product['image_url'] ?? '';
-                  final isFavourite = product['isFavourite'] ?? false;
                   final material = product['material'] ?? '';
                   final name = product['name'] ?? '';
                   final partner = product['partner'] ?? '';
                   final price = product['price'] ?? '';
-                  final productionUnit = product['productionunit'] ?? '';
                   final qty = product['qty'] ?? 0;
                   final size = product['size'] ?? '';
 
@@ -68,6 +77,7 @@ class SanXuatScreen extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                         Text('Order ID: $orderId'),
                         Text('Danh mục: $category'),
                         Text('Màu sắc: $color'),
                         Text('Kích thước: $size'),
@@ -85,17 +95,17 @@ class SanXuatScreen extends StatelessWidget {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: Text('Hoàn thành'),
-                                content: Text('Bạn có chắc chắn đang vận chuyển đơn hàng này?'),
+                                title:const Text('Hoàn thành'),
+                                content:const Text('Bạn có chắc chắn đang vận chuyển đơn hàng này?'),
                                 actions: [
                                   TextButton(
-                                    child: Text('Hủy'),
+                                    child:const Text('Hủy'),
                                     onPressed: () {
                                       Navigator.of(ctx).pop();
                                     },
                                   ),
                                   TextButton(
-                                    child: Text('Xác nhận'),
+                                    child:const Text('Xác nhận'),
                                     onPressed: () {
                                       // Thay đổi trạng thái đơn hàng thành 'Đang sản xuất'
                                       FirebaseFirestore.instance
@@ -110,24 +120,24 @@ class SanXuatScreen extends StatelessWidget {
                               ),
                             );
                           },
-                          child: Text('Hoàn thành'),
+                          child:const Text('Hoàn thành'),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title: Text('Hủy đơn hàng'),
-                                content: Text('Bạn có chắc chắn muốn hủy đơn hàng này?'),
+                                title:const Text('Hủy đơn hàng'),
+                                content:const Text('Bạn có chắc chắn muốn hủy đơn hàng này?'),
                                 actions: [
                                   TextButton(
-                                    child: Text('Hủy'),
+                                    child:const Text('Hủy'),
                                     onPressed: () {
                                       Navigator.of(ctx).pop();
                                     },
                                   ),
                                   TextButton(
-                                    child: Text('Hủy đơn hàng'),
+                                    child:const Text('Hủy đơn hàng'),
                                     onPressed: () {
                                       // Thay đổi trạng thái đơn hàng thành 'Đã hủy'
                                       FirebaseFirestore.instance
@@ -142,7 +152,7 @@ class SanXuatScreen extends StatelessWidget {
                               ),
                             );
                           },
-                          child: Text('Hủy'),
+                          child:const Text('Hủy'),
                         ),
                       ],
                     ),
@@ -166,7 +176,7 @@ class SanXuatScreen extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Text('Đã xảy ra lỗi: ${snapshot.error}');
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
         },
       ),

@@ -2,27 +2,43 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DaHuyScreen extends StatelessWidget {
+class DaHuyScreen extends StatefulWidget {
   static const routeName = '/da_huy-screen';
+
+  const DaHuyScreen({super.key});
+  @override
+  _DaHuyScreenState createState() => _DaHuyScreenState();
+}
+
+class _DaHuyScreenState extends State<DaHuyScreen> {
+  final firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+  String nameuser = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _reloadData();
+  }
+
+  Future<void> _reloadData() async {
+    await getNameUser();
+    setState(() {});
+  }
+
+  Future<void> getNameUser() async {
+    DocumentSnapshot snapshot = await firestore
+        .collection("Provider")
+        .doc(_auth.currentUser!.uid)
+        .get();
+    nameuser = snapshot.get('name');
+  }
 
   @override
   Widget build(BuildContext context) {
-    final firestore = FirebaseFirestore.instance;
-    final _auth = FirebaseAuth.instance;
-    String nameuser = '';
-
-    // Lấy giá trị nameuser từ Firestore
-    void getNameUser() async {
-      DocumentSnapshot snapshot = await firestore
-          .collection("Provider")
-          .doc(_auth.currentUser!.uid)
-          .get();
-      nameuser = snapshot.get('name');
-    }
-    getNameUser();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đơn hàng đã hủy'),
+        title:const Text('Đơn hàng đã hủy'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('orders').snapshots(),
@@ -42,21 +58,16 @@ class DaHuyScreen extends StatelessWidget {
                 final addressUser = document['addressUser'] ?? '';
                 final nameUser = document['nameUser'] ?? '';
                 final orderId = document['orderId'] ?? '';
-                final payment = document['payment'] ?? '';
                 final phoneUser = document['phoneUser'] ?? '';
-                final totalPrice = document['totalPrice'] ?? 0;
 
                 final products = productionUnit.map<Widget>((product) {
                   final category = product['category'] ?? '';
                   final color = product['color'] ?? '';
-                  final description = product['description'] ?? '';
                   final imageUrl = product['image_url'] ?? '';
-                  final isFavourite = product['isFavourite'] ?? false;
                   final material = product['material'] ?? '';
                   final name = product['name'] ?? '';
                   final partner = product['partner'] ?? '';
                   final price = product['price'] ?? '';
-                  final productionUnit = product['productionunit'] ?? '';
                   final qty = product['qty'] ?? 0;
                   final size = product['size'] ?? '';
 
@@ -68,6 +79,7 @@ class DaHuyScreen extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text('Order ID: $orderId'),
                         Text('Danh mục: $category'),
                         Text('Màu sắc: $color'),
                         Text('Kích thước: $size'),
@@ -77,7 +89,6 @@ class DaHuyScreen extends StatelessWidget {
                         Text('Số lượng: $qty'),
                       ],
                     ),
-                 
                   );
                 }).toList();
 
@@ -98,7 +109,7 @@ class DaHuyScreen extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Text('Đã xảy ra lỗi: ${snapshot.error}');
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
         },
       ),
