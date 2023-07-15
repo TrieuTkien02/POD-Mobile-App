@@ -43,7 +43,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case ForgotPassword.routeName:
       return MaterialPageRoute(
-        builder: (context) => const ForgotPassword(),
+        builder: (context) => ForgotPassword(),
       );
       
       case EditProfile.routeName:
